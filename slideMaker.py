@@ -134,7 +134,7 @@ def addSlideTextPlot(slideTitle,bullets,plotName):
     code = "\\begin{frame}\\frametitle{%s}\\begin{itemize} \n" % (slideTitle)
     code += bulletsToCode(bullets)
     code += "\\centering"
-    code += "\\vspace*{-0.035\\textheight}\\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
+    code += "\\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
                 % (textLinesToPlotHeight(bulletNLines(bullets)),plotName)
     code += "\\end{itemize}\\end{frame} \n\n" 
     return code
@@ -143,9 +143,9 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
     code = "\\begin{frame}\\frametitle{%s}\\begin{itemize} \n" % (slideTitle)
     code += bulletsToCode(bullets)
     code += "\\centering"
-    code += "\\vspace*{-0.035\\textheight}\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n" \
+    code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n" \
                 % (textLinesToPlotHeight(bulletNLines(bullets)),plotName1)
-    code += "\\vspace*{-0.035\\textheight}\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n"  \
+    code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n"  \
                 % (textLinesToPlotHeight(bulletNLines(bullets)),plotName2)
     code += "\\end{itemize}\\end{frame} \n\n" 
     return code
