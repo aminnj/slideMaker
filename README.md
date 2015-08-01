@@ -21,3 +21,16 @@ sm.addSlide(text=content, p1="test/zmass.pdf", p2="test/zmass.pdf")
 sm.writeSlides("test.tex", compile=True)
 ```
 This will produce test.pdf with an example slide for each of the possible slide types.
+
+
+## TODO:
+* support Madrid theme in Software/SlideMaker
+* support minimal ("Alex") theme in Software/SlideMaker
+    ** custom first slide, blank theme, tikz triangle page number
+* if all entries are bullets, bullets should not be indented as this wastes space
+* add slide type that has text on the left, picture on the right
+* if a slide has a small amount of text, have an option to have text start at top of slide right under the title
+* add option parser
+* handle long titles properly
+* automatically copy output to ~/public_html/ or ~/public_html/dump/
+* figure out good algorithm for resizing images so that they don't overlap with text
