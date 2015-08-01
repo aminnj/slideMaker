@@ -1,6 +1,6 @@
 ## minimal working example
 Inside the main repository directory, create and execute a python file with the contents
-```
+```python
 from slideMaker import *
 
 content = """
