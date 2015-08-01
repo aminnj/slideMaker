@@ -8,6 +8,7 @@ header = """
 \\usepackage{graphicx}
 \\usepackage{xcolor}
 \\usepackage{slashed}
+\\graphicspath{ {./test/} }
 \\setbeamertemplate{navigation symbols}{}
 \\usetheme{AnnArbor}
 \\usecolortheme{dolphin}
@@ -205,7 +206,7 @@ def initSlides(name="Nick"):
     source += header
     print ">>> Initializing slides"
 
-def writeSlides(output="output.tex", compile=False, copy=False):
+def writeSlides(output="output.tex", compile=False, copy=False, dump=False):
     global source
     source += footer
     fh = open(output,"w")
@@ -224,10 +225,9 @@ def writeSlides(output="output.tex", compile=False, copy=False):
             print ">>> Compiled slides to", output.replace(".tex",".pdf")
 
         if(copy):
-            dumpDir = True
-            stat,out = commands.getstatusoutput("cp %s ~/public_html/%s/; echo $USER" % (output.replace(".tex",".pdf"), "dump" if dumpDir else ""))
+            stat,out = commands.getstatusoutput("cp %s ~/public_html/%s/; echo $USER" % (output.replace(".tex",".pdf"), "dump" if dump else ""))
             user = out.split("\n")[-1].strip()
-            print ">>> Copied output to uaf-6.t2.ucsd.edu/~%s/%s/%s" % (user, "dump" if dumpDir else "", output.replace(".tex",".pdf"))
+            print ">>> Copied output to uaf-6.t2.ucsd.edu/~%s/%s%s" % (user, "dump/" if dump else "", output.replace(".tex",".pdf"))
 
 
 if __name__ == '__main__':
@@ -248,11 +248,11 @@ if __name__ == '__main__':
 
     initSlides("Nick")
     addSlide(title="this is where I put a title")
-    addSlide(p1="./test/yields.pdf",p2="./test/yields.pdf")
-    addSlide(p1="./test/zmass.pdf")
+    addSlide(p1="yields.pdf",p2="yields.pdf")
+    addSlide(p1="zmass.pdf")
     addSlide(text=content)
-    addSlide(text=content2, p1="./test/zmass.pdf")
-    addSlide(text=content2, p1="./test/filt.pdf")
-    addSlide(text=content2, p1="./test/zmass.pdf", p2="./test/zmass.pdf")
-    writeSlides("test.tex", compile=True, copy=True)
+    addSlide(text=content2, p1="zmass.pdf")
+    addSlide(text=content2, p1="filt.pdf")
+    addSlide(text=content2, p1="zmass.pdf", p2="zmass.pdf")
+    writeSlides("test.tex", compile=True, copy=True, dump=True)
 

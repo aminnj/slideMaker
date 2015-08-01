@@ -39,3 +39,4 @@ This will produce test.pdf with an example slide for each of the possible slide 
 * add option parser
 * handle long titles properly
 * figure out good algorithm for resizing images so that they don't overlap with text
+* option to add folder to graphicspath
