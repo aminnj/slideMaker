@@ -28,15 +28,18 @@ sm.writeSlides("test.tex", compile=True)
 ```
 This will produce test.pdf with an example slide for each of the possible slide types.
 
+## Notes:
+* remember to compile twice to pick up the proper slide numbers (stupid latex)
 
 ## TODO:
 * support Madrid theme in Software/SlideMaker
 * support minimal ("Alex") theme in Software/SlideMaker
     ** custom first slide, blank theme, tikz triangle page number
-* if all entries are bullets, bullets should not be indented as this wastes space
 * add slide type that has text on the left, picture on the right
-* if a slide has a small amount of text, have an option to have text start at top of slide right under the title
 * add option parser
 * handle long titles properly
+    ** title slide
+    ** other slides. consider removing logos on top right when title is long
 * figure out good algorithm for resizing images so that they don't overlap with text
+* currently need enumitem.sty to indent itemize environment (and have extra customization for the future. figure out how to put this in a folder so stuff like this doesn't eventually clutter the repo.
 * option to add folder to graphicspath

@@ -8,6 +8,8 @@ header = """
 \\usepackage{graphicx}
 \\usepackage{xcolor}
 \\usepackage{slashed}
+\\usepackage{amssymb}
+\\usepackage{enumitem}
 \\graphicspath{ {./test/}, {./logos/} }
 \\setbeamertemplate{navigation symbols}{}
 \\usetheme{AnnArbor}
@@ -16,15 +18,14 @@ header = """
 \\setbeamercolor{title}{fg=white,bg=blue!70!yellow,series=\\bfseries}
 \\setbeamertemplate{headline}{} % suppress that top bar
 \\useinnertheme{rectangles}
-% \\setbeamertemplate{frametitle}[default][center]
-% \\usepackage{dejavu}
 
-\\newcommand{\\point}[1]{ \\begin{itemize} \\item{#1} \\end{itemize} }
-\\newcommand{\\subpoint}[1]{ \\begin{itemize} \\item[] \\begin{itemize} \\item{#1} \\end{itemize} \\end{itemize} }
 \\newcommand{\\met}{\\slashed{E}_T}
 \\newcommand{\\red}[1]{\\textcolor{red}{#1}}
 \\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}
 \\newcommand{\\orange}[1]{\\textcolor{orange}{#1}}
+
+\\definecolor{coolblue}{RGB}{51,51,179}
+\\setlist[itemize]{label=$\\textcolor{coolblue}{\\blacktriangleright}$,leftmargin=*}
 
 \\begin{document}
 \\author[AUTHORHERE]{}
@@ -50,13 +51,31 @@ header = """
 footer = "\\end{document}"
 
 def bulletsToCode(bullets):
-    code = ""
-    for bullet in bullets:
-        if(len(bullet) < 4): continue
-        if(bullet.strip().startswith("--")):
-            code += "\\subpoint{%s} \n" % (bullet.replace("--","",1).strip())
-        else:
-            code += "\\point{%s} \n" % (bullet.replace("-","",1).strip())
+    code = "\\begin{itemize}\n"
+    wasSubpoint=False
+    bullets = [bullet.strip() for bullet in bullets if len(bullet.strip()) > 3]
+    for i,bullet in enumerate(bullets):
+        isSubpoint = bullet.strip().startswith("--")
+        isLast = i == (len(bullets)-1)
+        bullet = bullet.replace("--","",1).replace("-","",1).strip()
+
+        if(isSubpoint and not wasSubpoint):
+            code += "    \\begin{itemize}\n"
+            code += "      \\item %s \n" % (bullet)
+        elif(wasSubpoint and not isSubpoint):
+            code += "    \\end{itemize}\n"
+            code += "  \\item %s \n" % (bullet)
+        elif(wasSubpoint and isSubpoint):
+            code += "      \\item %s \n" % (bullet)
+        elif(not wasSubpoint and not isSubpoint):
+            code += "  \\item %s \n" % (bullet)
+        else: print "You goofed with your logic"
+
+        if(isLast and isSubpoint): code += "  \\end{itemize}\n"
+
+        wasSubpoint = isSubpoint
+
+    code += "\\end{itemize}\n"
     return code
 
 def bulletLength(text,subpoint=False):
@@ -126,29 +145,29 @@ def addSlidePlotPlot(slideTitle, plotName1, plotName2):
     return code
 
 def addSlideText(slideTitle,bullets):
-    code = "\\begin{frame}\\frametitle{%s}\\begin{itemize} \n" % (slideTitle)
+    code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += bulletsToCode(bullets)
-    code += "\\end{itemize}\\end{frame} \n\n"
+    code += "\\end{frame} \n\n"
     return code
 
 def addSlideTextPlot(slideTitle,bullets,plotName):
-    code = "\\begin{frame}\\frametitle{%s}\\begin{itemize} \n" % (slideTitle)
+    code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += bulletsToCode(bullets)
-    code += "\\centering"
+    code += "\\begin{center}"
     code += "\\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
                 % (textLinesToPlotHeight(bulletNLines(bullets)),plotName)
-    code += "\\end{itemize}\\end{frame} \n\n" 
+    code += "\\end{center}\\end{frame} \n\n" 
     return code
 
 def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
-    code = "\\begin{frame}\\frametitle{%s}\\begin{itemize} \n" % (slideTitle)
+    code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += bulletsToCode(bullets)
-    code += "\\centering"
+    code += "\\begin{center}"
     code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n" \
                 % (textLinesToPlotHeight(bulletNLines(bullets)),plotName1)
     code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n"  \
                 % (textLinesToPlotHeight(bulletNLines(bullets)),plotName2)
-    code += "\\end{itemize}\\end{frame} \n\n" 
+    code += "\\end{center}\\end{frame} \n\n" 
     return code
 
 
@@ -232,14 +251,14 @@ def writeSlides(output="output.tex", compile=False, copy=False, dump=False):
 
 if __name__ == '__main__':
     content = """
-    - first \\textbf{bullet} point and if I make it long enough, it should wrap to the next line
+     - first \\textbf{bullet} point and if I make it long enough, it should wrap to the next line
      -- first secondary bullet \\textcolor{blue}{point} similarly this should wrap to the next line given enough length
      - lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed   
      -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini aa 
      -- second secondary bullet point $\\met$
      -- third secondary bullet \\orange{test}
-    second \\textcolor{red}{point}
-    third bullet point
+     - second \\textcolor{red}{point}
+     - third bullet point
      -- fourth secondary bullet point $Z\\rightarrow\\mu\\mu$
      -- fourth secondary bullet point $Z \\rightarrow \\mu\\mu$
     """
