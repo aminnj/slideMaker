@@ -30,6 +30,7 @@ This will produce test.pdf with an example slide for each of the possible slide 
 
 ## Notes:
 * remember to compile twice to pick up the proper slide numbers (stupid latex)
+* put updated style files into style and include them in a way similar to enumitem
 
 ## TODO:
 * support Madrid theme in Software/SlideMaker
@@ -41,5 +42,4 @@ This will produce test.pdf with an example slide for each of the possible slide 
     ** title slide
     ** other slides. consider removing logos on top right when title is long
 * figure out good algorithm for resizing images so that they don't overlap with text
-* currently need enumitem.sty to indent itemize environment (and have extra customization for the future. figure out how to put this in a folder so stuff like this doesn't eventually clutter the repo.
 * option to add folder to graphicspath

@@ -9,7 +9,7 @@ header = """
 \\usepackage{xcolor}
 \\usepackage{slashed}
 \\usepackage{amssymb}
-\\usepackage{enumitem}
+\\usepackage{./styles/enumitem}
 \\graphicspath{ {./test/}, {./logos/} }
 \\setbeamertemplate{navigation symbols}{}
 \\usetheme{AnnArbor}
