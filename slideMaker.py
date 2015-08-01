@@ -8,7 +8,7 @@ header = """
 \\usepackage{graphicx}
 \\usepackage{xcolor}
 \\usepackage{slashed}
-\\graphicspath{ {./test/} }
+\\graphicspath{ {./test/}, {./logos/} }
 \\setbeamertemplate{navigation symbols}{}
 \\usetheme{AnnArbor}
 \\usecolortheme{dolphin}
@@ -39,10 +39,10 @@ header = """
 }
 \\addtobeamertemplate{frametitle}{}{%
     \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
-        \\includegraphics[height=0.82cm]{ucsbwave.pdf}
+        \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
     \\end{textblock*}
     \\begin{textblock*}{2.1cm}(0.98\\textwidth,0.09cm)
-        \\includegraphics[height=0.82cm]{cmsbwlogothick.png}
+        \\includegraphics[height=0.82cm]{./logos/cmsbwlogothick.png}
     \\end{textblock*}
 } \n\n
 """
@@ -94,10 +94,10 @@ def addSlideTitle(title):
     \\begin{frame}
     \\titlepage
         \\begin{textblock*}{2.1cm}(0.12\\textwidth,0.8\\textheight)
-            \\includegraphics[height=1.3cm]{ucsbwave.pdf}
+            \\includegraphics[height=1.3cm]{./logos/ucsbwave.pdf}
         \\end{textblock*}
         \\begin{textblock*}{2.1cm}(0.8\\textwidth,0.8\\textheight)
-            \\includegraphics[height=1.3cm]{cmsbwlogothick.png}
+            \\includegraphics[height=1.3cm]{./logos/cmsbwlogothick.png}
         \\end{textblock*}
     \\end{frame} \n\n
     """ % (title)
