@@ -1,4 +1,10 @@
-## minimal working example
+## minimal minimal minimal working example
+1) check out repo
+2) python slideMaker.py
+3) look at the output
+This makes it easy to edit the slideMaker and test it on-the-fly.
+
+## standalone minimal working example
 Inside the main repository directory, create and execute a python file with the contents
 ```python
 import slideMaker as sm
@@ -32,5 +38,4 @@ This will produce test.pdf with an example slide for each of the possible slide 
 * if a slide has a small amount of text, have an option to have text start at top of slide right under the title
 * add option parser
 * handle long titles properly
-* automatically copy output to ~/public_html/ or ~/public_html/dump/
 * figure out good algorithm for resizing images so that they don't overlap with text

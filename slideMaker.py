@@ -152,22 +152,6 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
 
 
 
-content = """
-- first \\textbf{bullet} point and if I make it long enough, it should wrap to the next line
- -- first secondary bullet \\textcolor{blue}{point} similarly this should wrap to the next line given enough length
- - lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed   
- -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini aa 
- -- second secondary bullet point $\\met$
- -- third secondary bullet \\orange{test}
-second \\textcolor{red}{point}
-third bullet point
- -- fourth secondary bullet point $Z\\rightarrow\\mu\\mu$
- -- fourth secondary bullet point $Z \\rightarrow \\mu\\mu$
-"""
-bullets = content.split("\n")
-content2 = "\n".join(bullets[0:4])
-
-
 def addSlide(title=None,text=None,p1=None,p2=None):
     global source
 
@@ -175,11 +159,11 @@ def addSlide(title=None,text=None,p1=None,p2=None):
     if( text ): bullets = text.split("\n")
 
     if( not title ):
-        if( p1 and not p2 ): title = p1.replace("_","\\_").split(".")[0].split("/")[-1]
-        elif( p2 and not p1 ): title = p1.replace("_","\\_").split(".")[0].split("/")[-1]
-        elif( p1 and p2 ):
-            title = p1.replace("_","\\_").split(".")[0].split("/")[-1] + ", " \
-                  + p2.replace("_","\\_").split(".")[0].split("/")[-1]
+        cleanP1 = p1.replace("_","\\_").rsplit(".",1)[0].split("/")[-1] if p1 else ""
+        cleanP2 = p2.replace("_","\\_").rsplit(".",1)[0].split("/")[-1] if p2 else ""
+        if( p1 and not p2 ): title = cleanP1
+        elif( p2 and not p1 ): title = cleanP2
+        elif( p1 and p2 ): title = cleanP1 + ", " + cleanP2
         else: title = "\\phantom{}"
 
     if( p1 and p2 ):
@@ -221,7 +205,7 @@ def initSlides(name="Nick"):
     source += header
     print ">>> Initializing slides"
 
-def writeSlides(output="output.tex", compile=False):
+def writeSlides(output="output.tex", compile=False, copy=False):
     global source
     source += footer
     fh = open(output,"w")
@@ -231,12 +215,20 @@ def writeSlides(output="output.tex", compile=False):
 
     if(compile):
         stat,out = commands.getstatusoutput("pdflatex -interaction=nonstopmode %s" % output)
-        if(stat not in [0, 256]): # 256 is warnings and 0 is good
-            print ">>> ERROR: Tried to compile, but failed with status %i. Last few lines of printout below." % stat
+        if("Fatal error" in out):
+            print ">>> ERROR: Tried to compile, but failed. Last few lines of printout below."
             print "_"*40
-            print "\n".join(out.split("\n")[-15:])
+            print "\n".join(out.split("\n")[-30:])
+            return
         else:
             print ">>> Compiled slides to", output.replace(".tex",".pdf")
+
+        if(copy):
+            dumpDir = True
+            stat,out = commands.getstatusoutput("cp %s ~/public_html/%s/; echo $USER" % (output.replace(".tex",".pdf"), "dump" if dumpDir else ""))
+            user = out.split("\n")[-1].strip()
+            print ">>> Copied output to uaf-6.t2.ucsd.edu/~%s/%s/%s" % (user, "dump" if dumpDir else "", output.replace(".tex",".pdf"))
+
 
 if __name__ == '__main__':
     content = """
@@ -262,5 +254,5 @@ if __name__ == '__main__':
     addSlide(text=content2, p1="./test/zmass.pdf")
     addSlide(text=content2, p1="./test/filt.pdf")
     addSlide(text=content2, p1="./test/zmass.pdf", p2="./test/zmass.pdf")
-    writeSlides("test.tex", compile=True)
+    writeSlides("test.tex", compile=True, copy=True)
 
