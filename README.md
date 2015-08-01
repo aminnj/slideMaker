@@ -11,7 +11,7 @@ content = """
  - second primary bullet point $Z \\rightarrow \\mu\\mu$
 """
 
-initSlides("Sicheng")
+initSlides("Nick")
 addSlide(title="this is where I put a title")
 addSlide(p1="test/yields.pdf",p2="test/yields.pdf")
 addSlide(p1="test/zmass.pdf")
