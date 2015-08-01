@@ -1,5 +1,7 @@
 import os,sys,commands
 
+source = ""
+
 header = """
 \\documentclass{beamer}
 \\usepackage[absolute,overlay]{textpos}
@@ -24,7 +26,7 @@ header = """
 \\newcommand{\\orange}[1]{\\textcolor{orange}{#1}}
 
 \\begin{document}
-\\author[Nick Amin]{}
+\\author[AUTHORHERE]{}
 \\date{\\today} 
 \\institute[SNT] 
 {
@@ -164,20 +166,8 @@ third bullet point
 """
 bullets = content.split("\n")
 content2 = "\n".join(bullets[0:4])
-# print content2
 
-# source = ""
-# source += header
-# source += addSlideTitle("this is where I put a title")
-# source += addSlidePlotPlot("PlotPlot","yieldsFilled1.pdf","yieldsFilled1.pdf")
-# source += addSlidePlot("Plot","h1D_zmass.pdf")
-# source += addSlideText("Text",bullets)
-# source += addSlideTextPlot("TextPlot",bullets[0:4],"h1D_zmass.pdf")
-# source += addSlideTextPlot("TextPlot",bullets[0:4],"h1D_caloMet_filt_isonoise.pdf")
-# source += addSlideTextPlotPlot("TextPlotPlot",bullets[0:4],"h1D_zmass.pdf","h1D_zmass.pdf")
-# source += footer
 
-source = ""
 def addSlide(title=None,text=None,p1=None,p2=None):
     global source
 
@@ -185,9 +175,11 @@ def addSlide(title=None,text=None,p1=None,p2=None):
     if( text ): bullets = text.split("\n")
 
     if( not title ):
-        if( p1 and not p2 ): title = p1.replace("_","\\_").split(".")[0]
-        elif( p2 and not p1 ): title = p1.replace("_","\\_").split(".")[0]
-        elif( p1 and p2 ): title = p1.replace("_","\\_").split(".")[0]+", "+p2.replace("_","\\_").split(".")[0]
+        if( p1 and not p2 ): title = p1.replace("_","\\_").split(".")[0].split("/")[-1]
+        elif( p2 and not p1 ): title = p1.replace("_","\\_").split(".")[0].split("/")[-1]
+        elif( p1 and p2 ):
+            title = p1.replace("_","\\_").split(".")[0].split("/")[-1] + ", " \
+                  + p2.replace("_","\\_").split(".")[0].split("/")[-1]
         else: title = "\\phantom{}"
 
     if( p1 and p2 ):
@@ -217,10 +209,13 @@ def initSlides(name="Nick"):
     global source, header
     if("Nick" in name): 
         header = header.replace("N. Amin", "\\textbf{N. Amin}")
+        header = header.replace("AUTHORHERE", "Nick Amin")
     elif("Sicheng" in name): 
         header = header.replace("S. Wang", "\\textbf{S. Wang}")
+        header = header.replace("AUTHORHERE", "Sicheng Wang")
     elif("Alex" in name): 
         header = header.replace("A. George", "\\textbf{A. George}")
+        header = header.replace("AUTHORHERE", "Alex George")
     else:
         print "who are you?"
     source += header
@@ -235,17 +230,37 @@ def writeSlides(output="output.tex", compile=False):
     print ">>> Wrote slides"
 
     if(compile):
-        stat,out = commands.getstatusoutput("pdflatex -interaction=batchmode %s" % output)
-        print ">>> Compiled slides to", output.replace(".tex",".pdf")
+        stat,out = commands.getstatusoutput("pdflatex -interaction=nonstopmode %s" % output)
+        if(stat not in [0, 256]): # 256 is warnings and 0 is good
+            print ">>> ERROR: Tried to compile, but failed with status %i. Last few lines of printout below." % stat
+            print "_"*40
+            print "\n".join(out.split("\n")[-15:])
+        else:
+            print ">>> Compiled slides to", output.replace(".tex",".pdf")
 
 if __name__ == '__main__':
+    content = """
+    - first \\textbf{bullet} point and if I make it long enough, it should wrap to the next line
+     -- first secondary bullet \\textcolor{blue}{point} similarly this should wrap to the next line given enough length
+     - lorem ipsum Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed   
+     -- tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mini aa 
+     -- second secondary bullet point $\\met$
+     -- third secondary bullet \\orange{test}
+    second \\textcolor{red}{point}
+    third bullet point
+     -- fourth secondary bullet point $Z\\rightarrow\\mu\\mu$
+     -- fourth secondary bullet point $Z \\rightarrow \\mu\\mu$
+    """
+    bullets = content.split("\n")
+    content2 = "\n".join(bullets[0:4])
+
     initSlides("Nick")
     addSlide(title="this is where I put a title")
-    addSlide(p1="media/test/yields.pdf",p2="media/test/yields.pdf")
-    addSlide(p1="media/test/zmass.pdf")
+    addSlide(p1="./test/yields.pdf",p2="./test/yields.pdf")
+    addSlide(p1="./test/zmass.pdf")
     addSlide(text=content)
-    addSlide(text=content2, p1="media/test/zmass.pdf")
-    addSlide(text=content2, p1="media/test/filter.pdf")
-    addSlide(text=content2, p1="media/test/zmass.pdf", p2="media/test/zmass.pdf")
+    addSlide(text=content2, p1="./test/zmass.pdf")
+    addSlide(text=content2, p1="./test/filt.pdf")
+    addSlide(text=content2, p1="./test/zmass.pdf", p2="./test/zmass.pdf")
     writeSlides("test.tex", compile=True)
 
