@@ -171,7 +171,7 @@ def bulletNLines(bullets):
     return nlines
 
 def textLinesToPlotHeight(nlines):
-    return 0.89 - nlines*0.05
+    return 0.85 - nlines*0.05
 
 def splitTitle(title):
     # title = cleanTex(title) # this removes the tex from the title!
