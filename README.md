@@ -1,7 +1,10 @@
 ## minimal minimal minimal working example
 1) check out repo
+
 2) python slideMaker.py
+
 3) look at the output
+
 This makes it easy to edit the slideMaker and test it on-the-fly.
 
 ## standalone minimal working example
