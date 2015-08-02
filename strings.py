@@ -27,8 +27,9 @@ commonHeader = """
 \\definecolor{darkgreen}{RGB}{0,100,0}
 \\definecolor{gray}{RGB}{128,128,128}
 \\definecolor{grey}{RGB}{128,128,128}
-\\definecolor{coolblue}{RGB}{51,51,179}
-\\definecolor{alexcolor}{RGB}{51,51,179}
+\\definecolor{nickcolor}{RGB}{51,51,179}
+\\definecolor{alexcolor}{RGB}{0,0,255}
+\\definecolor{madridcolor}{RGB}{51,51,179}
 
 \\author[AUTHORHERE]{}
 \\date{\\today} 
@@ -58,7 +59,7 @@ themeNick = """
 \\setbeamercolor{title}{fg=white,bg=blue!70!yellow}
 \\setbeamertemplate{headline}{} % suppress that top bar
 \\useinnertheme{rectangles}
-\\setlist[itemize]{label=$\\textcolor{coolblue}{\\blacktriangleright}$,leftmargin=*}
+\\setlist[itemize]{label=$\\textcolor{nickcolor}{\\blacktriangleright}$,leftmargin=*}
 
 \\begin{document}
 """
@@ -109,7 +110,7 @@ themeMadrid = """
 \\usetheme{AnnArbor}
 \\usecolortheme{wolverine}
 \\setbeamertemplate{headline}{} % suppress that top bar
-\\setlist[itemize]{label=$\\textcolor{coolblue}{\\blacktriangleright}$,leftmargin=*}
+\\setlist[itemize]{label=$\\textcolor{madridcolor}{\\blacktriangleright}$,leftmargin=*}
 
 \\begin{document}
 """

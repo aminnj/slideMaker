@@ -184,7 +184,9 @@ def writeSlides(output="output.tex", opts="--compile"):
     opts = utils.parseOptions(opts)
 
     if(opts["compile"]):
-        stat,out = commands.getstatusoutput("pdflatex -interaction=nonstopmode %s" % output)
+        # compile twice to get correct slide numbers. latex is dumb. is this the only way?
+        stat,out = commands.getstatusoutput("pdflatex -interaction=nonstopmode %s && \
+                                             pdflatex -interaction=nonstopmode %s " % (output,output) )
         if("Fatal error" in out):
             print ">>> ERROR: Tried to compile, but failed. Last few lines of printout below."
             print "_"*40
@@ -200,10 +202,20 @@ def writeSlides(output="output.tex", opts="--compile"):
 
 def startBackup():
     global source
+    color = "black"
+    if(theme == "alex"): color = "alexcolor"
+    if(theme == "nick"): color = "nickcolor"
+    if(theme == "madrid"): color = "madridcolor"
+
     source += """
-    \\apendix
-    \\frame[plain]{ \huge{backup} }
-    """
+    \\appendix
+    \\begin{frame}[plain]
+    \\centering
+    \\begin{textblock*}{10cm}[0.0,0.0](5.5cm,4.0cm)
+    \\begin{LARGE} \\textcolor{%s}{\\textbf{Backup}} \\end{LARGE}
+    \\end{textblock*}
+    \\end{frame}
+    """ % (color)
 
 
 if __name__ == '__main__':
@@ -230,8 +242,8 @@ if __name__ == '__main__':
         addSlide(p1="yields.pdf",p2="yields.pdf")
         addSlide(p1="zmass.pdf")
         addSlide(text=content)
-        startBackup()
         addSlide(text=content2, p1="zmass.pdf")
+        startBackup()
         addSlide(text=content2, p1="filt.pdf")
         addSlide(text=content2, p1="zmass.pdf", p2="zmass.pdf")
         writeSlides("test_%s.tex" % t, opts="--compile --copy --dump")
