@@ -1,5 +1,5 @@
 ## minimal minimal minimal working example
-1) check out repo
+1) check out repo and make sure there's a folder called "dump" inside the public_html directory
 
 2) python slideMaker.py
 

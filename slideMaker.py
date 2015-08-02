@@ -196,9 +196,8 @@ def writeSlides(output="output.tex", opts="--compile"):
             print ">>> Compiled slides to", output.replace(".tex",".pdf")
 
         if(opts["copy"]):
-            stat,out = commands.getstatusoutput("cp %s ~/public_html/%s/; echo $USER" % (output.replace(".tex",".pdf"), "dump" if opts["dump"] else ""))
-            user = out.split("\n")[-1].strip()
-            print ">>> Copied output to uaf-6.t2.ucsd.edu/~%s/%s%s" % (user, "dump/" if opts["dump"] else "", output.replace(".tex",".pdf"))
+            stat,out = commands.getstatusoutput("cp %s ~/public_html/%s/" % (output.replace(".tex",".pdf"), "dump" if opts["dump"] else ""))
+            print ">>> Copied output to uaf-6.t2.ucsd.edu/~%s/%s%s" % (os.getenv("USER"), "dump/" if opts["dump"] else "", output.replace(".tex",".pdf"))
 
 def startBackup():
     global source
