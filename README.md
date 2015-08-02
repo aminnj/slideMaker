@@ -30,7 +30,7 @@ for t in ["nick","alex","madrid"]:
     sm.startBackup()
     sm.addSlide(text=content, p1="test/filt.pdf")
     sm.addSlide(text=content, p1="test/zmass.pdf", p2="test/zmass.pdf")
-    sm.writeSlides("test_%s.tex" % t, "--compile --copy")
+    sm.writeSlides("test_%s.tex" % t, opts="--compile --copy")
 ```
 This will produce test_*.pdf with an example slide for each of the possible slide types, and copy them to your public_html folder
 
