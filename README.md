@@ -44,3 +44,4 @@ This will produce test.pdf with an example slide for each of the possible slide 
 ** see http://www.latex-community.org/forum/viewtopic.php?f=45&t=22655
 * option to add folder to graphicspath
 * option for free floating text
+* fix backup slide numbering and backup slide formatting

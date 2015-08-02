@@ -198,6 +198,13 @@ def writeSlides(output="output.tex", opts="--compile"):
             user = out.split("\n")[-1].strip()
             print ">>> Copied output to uaf-6.t2.ucsd.edu/~%s/%s%s" % (user, "dump/" if opts["dump"] else "", output.replace(".tex",".pdf"))
 
+def startBackup():
+    global source
+    source += """
+    \\apendix
+    \\frame[plain]{ \huge{backup} }
+    """
+
 
 if __name__ == '__main__':
     content = """
@@ -223,6 +230,7 @@ if __name__ == '__main__':
         addSlide(p1="yields.pdf",p2="yields.pdf")
         addSlide(p1="zmass.pdf")
         addSlide(text=content)
+        startBackup()
         addSlide(text=content2, p1="zmass.pdf")
         addSlide(text=content2, p1="filt.pdf")
         addSlide(text=content2, p1="zmass.pdf", p2="zmass.pdf")

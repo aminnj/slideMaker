@@ -14,6 +14,7 @@ commonHeader = """
 \\usepackage{graphicx}
 \\usepackage{xcolor}
 \\usepackage{slashed}
+\\usepackage{./styles/appendixnumberbeamer} 
 \\usepackage{amssymb}
 \\graphicspath{ {./test/}, {./logos/} }
 \\setbeamertemplate{navigation symbols}{}
