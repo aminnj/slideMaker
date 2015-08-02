@@ -21,7 +21,8 @@ content = """
 
 # supported themes are "nick", "alex", and "madrid"
 for t in ["nick","alex","madrid"]:
-    sm.initSlides(me="Nick",themeName=t)
+    # test2 and test3 can be folders with your plots, so you can execute this script anywhere really
+    initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/")
     sm.addSlide(title="this is where I put a title")
     sm.addSlide(p1="test/yields.pdf",p2="test/yields.pdf")
     sm.addSlide(p1="test/zmass.pdf")
@@ -40,5 +41,4 @@ This will produce test_*.pdf with an example slide for each of the possible slid
 * add slide type that has text on the left, picture on the right
 * figure out good algorithm for resizing images so that they don't overlap with text
 ** see http://www.latex-community.org/forum/viewtopic.php?f=45&t=22655
-* option to add folder to graphicspath
 * option for free floating text

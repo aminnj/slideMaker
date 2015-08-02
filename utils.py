@@ -1,6 +1,6 @@
 ### utility functions that don't directly touch the latex source go here
 
-listOfOptions = ["dump", "copy", "compile"]
+listOfOptions = ["dump", "copy", "compile", "graphicspaths"]
 def parseOptions(optString):
     opts = { }
     for optName in listOfOptions:

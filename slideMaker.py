@@ -4,6 +4,7 @@ from strings import *
 
 source = ""
 theme = ""
+graphicspaths = ["./test/", "./logos/"]
 
 def addSlideTitle(title):
     global source
@@ -141,10 +142,13 @@ def addSlide(title=None,text=None,p1=None,p2=None):
     else:
         print "couldn't figure out what you want"
 
-def initSlides(me="Nick", themeName="nick"):
+def initSlides(me="Nick", themeName="nick", opts=""):
     global source, commonHeader, theme, themeAlex
     source = ""
     theme = themeName.lower()
+    opts = utils.parseOptions(opts)
+
+
     print ">>> Hi",me
     print ">>> Using theme:",theme
 
@@ -170,6 +174,12 @@ def initSlides(me="Nick", themeName="nick"):
         source = source.replace("A. George", "\\underline{\\textbf{A. George}}")
     else:
         print "who are you?"
+
+    if(opts["graphicspaths"]):
+        graphicspaths.extend(opts["graphicspaths"].split(","))
+        print ">>> Adding these to the graphics path:", opts["graphicspaths"].split(",")
+
+    source = source.replace("GRAPHICSPATHHERE", "".join(["{"+p+"}" for p in graphicspaths]))
 
     print ">>> Initializing slides"
 
@@ -234,9 +244,9 @@ if __name__ == '__main__':
     content2 = "\n".join(bullets[0:4])
 
 
-    for t in ["nick", "alex", "madrid"]:
-    # for t in ["nick"]:
-        initSlides(me="Nick",themeName=t)
+    # for t in ["nick", "alex", "madrid"]:
+    for t in ["nick"]:
+        initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/")
         addSlide(title="this is where I put a long title")
         addSlide(p1="yields.pdf",p2="yields.pdf")
         addSlide(p1="zmass.pdf")

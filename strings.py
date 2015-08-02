@@ -16,7 +16,7 @@ commonHeader = """
 \\usepackage{slashed}
 \\usepackage{./styles/appendixnumberbeamer} 
 \\usepackage{amssymb}
-\\graphicspath{ {./test/}, {./logos/} }
+\\graphicspath{ GRAPHICSPATHHERE }
 \\setbeamertemplate{navigation symbols}{}
 
 \\newcommand{\\met}{\\slashed{E}_T}
