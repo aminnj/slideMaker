@@ -17,7 +17,8 @@ content = """
  - second primary bullet point $Z \\rightarrow \\mu\\mu$
 """
 
-sm.initSlides("Nick")
+# supported themes are "nick", "alex", and "madrid"
+sm.initSlides(me="Nick",themeName="nick")
 sm.addSlide(title="this is where I put a title")
 sm.addSlide(p1="test/yields.pdf",p2="test/yields.pdf")
 sm.addSlide(p1="test/zmass.pdf")
@@ -33,13 +34,7 @@ This will produce test.pdf with an example slide for each of the possible slide 
 * put updated style files into style and include them in a way similar to enumitem
 
 ## TODO:
-* support Madrid theme in Software/SlideMaker
-* support minimal ("Alex") theme in Software/SlideMaker
-    ** custom first slide, blank theme, tikz triangle page number
 * add slide type that has text on the left, picture on the right
 * add option parser
-* handle long titles properly
-    ** title slide
-    ** other slides. consider removing logos on top right when title is long
 * figure out good algorithm for resizing images so that they don't overlap with text
 * option to add folder to graphicspath

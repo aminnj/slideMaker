@@ -2,42 +2,48 @@ import os,sys,commands
 
 source = ""
 
-header = """
-\\documentclass{beamer}
+institute = """
+    N. Amin, C. Campagnari, A. George, F. Golf, J. Gran,\\\\ B. Marsh, I. Suarez, S. Wang\\\\ (UCSB)\\\\ \\vspace{0.3cm} 
+    G. Cerati, M. Derdzinski, D. Klein, D. Olivito, G. Zevi Della Porta, \\\\ C. Welke, J. Wood, F. W\\"urthwein, A. Yagil \\\\ (UCSD)\\\\ \\vspace{0.3cm} 
+        L. Bauerdick, K. Burkett, O. Gutsche, S. Jindariani, \\\\ J. Linacre, M. Liu, R. Lopes de Sa, H. Weber  \\\\ (FNAL) \\\\ 
+"""
+
+commonHeader = """
+\\documentclass[aspectratio=1610]{beamer}
 \\usepackage[absolute,overlay]{textpos}
+\\usepackage{tikz}
+\\usepackage{microtype}
 \\usepackage{graphicx}
 \\usepackage{xcolor}
 \\usepackage{slashed}
 \\usepackage{amssymb}
-\\usepackage{./styles/enumitem}
 \\graphicspath{ {./test/}, {./logos/} }
 \\setbeamertemplate{navigation symbols}{}
-\\usetheme{AnnArbor}
-\\usecolortheme{dolphin}
-\\setbeamercolor*{frametitle}{fg=blue!70!yellow,bg=blue!70!black!10,series=\\bfseries}
-\\setbeamercolor{title}{fg=white,bg=blue!70!yellow,series=\\bfseries}
-\\setbeamertemplate{headline}{} % suppress that top bar
-\\useinnertheme{rectangles}
 
 \\newcommand{\\met}{\\slashed{E}_T}
 \\newcommand{\\red}[1]{\\textcolor{red}{#1}}
 \\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}
 \\newcommand{\\orange}[1]{\\textcolor{orange}{#1}}
 
+\\definecolor{darkgreen}{RGB}{0,100,0}
+\\definecolor{gray}{RGB}{128,128,128}
+\\definecolor{grey}{RGB}{128,128,128}
 \\definecolor{coolblue}{RGB}{51,51,179}
-\\setlist[itemize]{label=$\\textcolor{coolblue}{\\blacktriangleright}$,leftmargin=*}
+\\definecolor{alexcolor}{RGB}{51,51,179}
 
-\\begin{document}
 \\author[AUTHORHERE]{}
 \\date{\\today} 
 \\institute[SNT] 
 {
     \\begin{center}
-    N. Amin, C. Campagnari, A. George, F. Golf, J. Gran,\\\\ B. Marsh, I. Suarez, S. Wang\\\\ (UCSB)\\\\ \\vspace{0.3cm} 
-    G. Cerati, M. Derdzinski, D. Klein, D. Olivito, G. Zevi Della Porta, \\\\ C. Welke, J. Wood, F. W\\"urthwein, A. Yagil \\\\ (UCSD)\\\\ \\vspace{0.3cm} 
-        L. Bauerdick, K. Burkett, O. Gutsche, S. Jindariani, \\\\ J. Linacre, M. Liu, R. Lopes de Sa, H. Weber  \\\\ (FNAL) \\\\ 
+    %s
         \\end{center}
 }
+
+""" % (institute)
+
+themeNick = """
+\\usepackage{./styles/enumitem}
 \\addtobeamertemplate{frametitle}{}{%
     \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
         \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
@@ -46,6 +52,67 @@ header = """
         \\includegraphics[height=0.82cm]{./logos/cmsbwlogothick.png}
     \\end{textblock*}
 } \n\n
+
+\\usetheme{AnnArbor}
+\\usecolortheme{dolphin}
+\\setbeamercolor*{frametitle}{fg=blue!70!yellow,bg=blue!70!black!10}
+\\setbeamercolor{title}{fg=white,bg=blue!70!yellow}
+\\setbeamertemplate{headline}{} % suppress that top bar
+\\useinnertheme{rectangles}
+\\setlist[itemize]{label=$\\textcolor{coolblue}{\\blacktriangleright}$,leftmargin=*}
+
+\\begin{document}
+"""
+
+themeAlex = """
+\\setbeamertemplate{footline}[frame number]
+\\setbeamercolor{frametitle}{fg=alexcolor}
+\\setbeamerfont{frametitle}{size=\\LARGE \\bfseries}
+\\setbeamertemplate{footline}{\\raisebox{5pt}{\\makebox[\\paperwidth]{\\hfill\\makebox[10pt]{\\scriptsize\\textcolor{white}{\\insertframenumber\\hspace{2mm}}}}}}\\setbeamersize{text margin left=10pt,text margin right=10pt}
+
+\\defbeamertemplate*{title page}{customized}[1][]{ 
+  \\begin{textblock*}{12.8cm}(0cm,1.5cm)
+  \\begin{center}
+  \\usebeamerfont{title}
+  \\textcolor{alexcolor}{\\textbf{\\huge TITLEHERE} } %% Allowed 20 characters upstairs and 30 downstairs
+  \\end{center}
+  \\end{textblock*}
+  \\begin{center}
+  \\textcolor{alexcolor}{\\rule{10cm}{2pt}}
+  \\end{center}
+  \\begin{textblock*}{12.8cm}(0cm,4.0cm)
+  \\begin{center}
+  %s
+  \\end{center}
+  \\end{textblock*}
+  \\begin{textblock*}{2.7cm}(0cm, 0.1cm)
+  \\includegraphics[width=2.7cm]{./logos/ucsb.pdf}
+  \\end{textblock*}
+  \\begin{textblock*}{2.2cm}(10.3cm, 0.2cm)
+  \\includegraphics[width=2.2cm]{./logos/CMS.pdf}
+  \\end{textblock*}
+}
+
+\\begin{document}
+""" % (institute)
+
+themeMadrid = """
+\\usepackage{./styles/enumitem}
+\\addtobeamertemplate{frametitle}{}{%
+    \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
+        \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
+    \\end{textblock*}
+    \\begin{textblock*}{2.1cm}(0.98\\textwidth,0.09cm)
+        \\includegraphics[height=0.82cm]{./logos/cmsbwlogothick.png}
+    \\end{textblock*}
+} \n\n
+
+\\usetheme{AnnArbor}
+\\usecolortheme{wolverine}
+\\setbeamertemplate{headline}{} % suppress that top bar
+\\setlist[itemize]{label=$\\textcolor{coolblue}{\\blacktriangleright}$,leftmargin=*}
+
+\\begin{document}
 """
 
 footer = "\\end{document}"
@@ -78,7 +145,7 @@ def bulletsToCode(bullets):
     code += "\\end{itemize}\n"
     return code
 
-def bulletLength(text,subpoint=False):
+def cleanTex(text):
     text = text.replace("\\","@")
     text = text.replace("\\\\","@")
     cleanwords = []
@@ -90,11 +157,11 @@ def bulletLength(text,subpoint=False):
             else:
                 word = "XXX"
         cleanwords.append(word)
+    return " ".join(cleanwords)
 
-    cleanline = " ".join(cleanwords)
-
-    length = len(cleanline)+5*subpoint
-    return length
+def bulletLength(text,subpoint=False):
+    cleanline = cleanTex(text)
+    return len(cleanline)+5*subpoint
 
 def bulletNLines(bullets):
     nlines = 0
@@ -103,12 +170,20 @@ def bulletNLines(bullets):
         nlines += bulletLength(bullet)//71 + 1
     return nlines
 
-
 def textLinesToPlotHeight(nlines):
-    return 0.86 - nlines*0.05
+    return 0.89 - nlines*0.05
+
+def splitTitle(title):
+    # title = cleanTex(title) # this removes the tex from the title!
+    if(len(title) <= 20):
+        return "\\\\ \\vspace{0.4cm} "+title
+    else:
+        return title[:20]+title[20:].split()[0] + "\\\\ \\vspace{0.4cm}" + " ".join(title[20:].split()[1:])
 
 def addSlideTitle(title):
-    code = """
+    global source
+
+    titlePageNick = """
     \\title{%s}
     \\begin{frame}
     \\titlepage
@@ -120,7 +195,39 @@ def addSlideTitle(title):
         \\end{textblock*}
     \\end{frame} \n\n
     """ % (title)
-    return code
+
+    titlePageAlex = """
+    \\frame[plain]{ \\titlepage }
+
+    \\usebackgroundtemplate{
+    \\begin{tikzpicture}[thick]
+    \\draw[fill=alexcolor, draw=alexcolor](0cm,0.0cm) -- (21.3cm,0.0cm) -- (21.3cm,21.3cm) -- (0.0cm,0.0cm);
+    \\end{tikzpicture}
+    }
+    """
+
+    titlePageMadrid = """
+    \\title{%s}
+    \\begin{frame}
+    \\titlepage
+        \\begin{textblock*}{2.1cm}(0.12\\textwidth,0.8\\textheight)
+            \\includegraphics[height=1.3cm]{./logos/ucsbwave.pdf}
+        \\end{textblock*}
+        \\begin{textblock*}{2.1cm}(0.8\\textwidth,0.8\\textheight)
+            \\includegraphics[height=1.3cm]{./logos/cmsbwlogothick.png}
+        \\end{textblock*}
+    \\end{frame} \n\n
+    """ % (title)
+
+    if(theme == "nick"):
+        source += titlePageNick
+    elif(theme == "alex"):
+        source = source.replace("TITLEHERE",splitTitle(title))
+        source += titlePageAlex
+    elif(theme == "madrid"):
+        source += titlePageMadrid
+    else:
+        source += "\\frame{ \\titlepage }"
 
 
 def addSlidePlot(slideTitle, plotName):
@@ -205,24 +312,39 @@ def addSlide(title=None,text=None,p1=None,p2=None):
         source += addSlideText(title,bullets)
     elif( title ):
         print ">>> Adding Title slide"
-        source += addSlideTitle(title)
+        addSlideTitle(title)
     else:
         print "couldn't figure out what you want"
 
-def initSlides(name="Nick"):
-    global source, header
-    if("Nick" in name): 
-        header = header.replace("N. Amin", "\\textbf{N. Amin}")
-        header = header.replace("AUTHORHERE", "Nick Amin")
-    elif("Sicheng" in name): 
-        header = header.replace("S. Wang", "\\textbf{S. Wang}")
-        header = header.replace("AUTHORHERE", "Sicheng Wang")
-    elif("Alex" in name): 
-        header = header.replace("A. George", "\\textbf{A. George}")
-        header = header.replace("AUTHORHERE", "Alex George")
+def initSlides(me="Nick", themeName="nick"):
+    global source, commonHeader, theme, themeAlex
+    theme = themeName.lower()
+    print ">>> Hi",me
+    print ">>> Using theme:",theme
+
+    source += commonHeader
+    if(theme == "nick"):
+        source += themeNick
+    elif(theme == "alex"):
+        source += themeAlex
+    elif(theme == "madrid"):
+        source += themeMadrid
+    else:
+        print "unsupported theme:", theme
+    
+
+    if("Nick" in me): 
+        source = source.replace("AUTHORHERE", "Nick Amin")
+        source = source.replace("N. Amin", "\\underline{\\textbf{N. Amin}}")
+    elif("Sicheng" in me): 
+        source = source.replace("AUTHORHERE", "Sicheng Wang")
+        source = source.replace("S. Wang", "\\underline{\\textbf{S. Wang}}")
+    elif("Alex" in me): 
+        source = source.replace("AUTHORHERE", "Alex George")
+        source = source.replace("A. George", "\\underline{\\textbf{A. George}}")
     else:
         print "who are you?"
-    source += header
+
     print ">>> Initializing slides"
 
 def writeSlides(output="output.tex", compile=False, copy=False, dump=False):
@@ -265,8 +387,9 @@ if __name__ == '__main__':
     bullets = content.split("\n")
     content2 = "\n".join(bullets[0:4])
 
-    initSlides("Nick")
-    addSlide(title="this is where I put a title")
+
+    initSlides(me="Nick",themeName="madrid")
+    addSlide(title="this is where I put a long title")
     addSlide(p1="yields.pdf",p2="yields.pdf")
     addSlide(p1="zmass.pdf")
     addSlide(text=content)
