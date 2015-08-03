@@ -9,6 +9,7 @@ institute = """
 commonHeader = """
 \\documentclass[aspectratio=1610]{beamer}
 \\usepackage[absolute,overlay]{textpos}
+%% \\usepackage[absolute,overlay,showboxes]{textpos} %% showboxes for position debugging
 \\usepackage{tikz}
 \\usepackage{microtype}
 \\usepackage{graphicx}
@@ -27,6 +28,7 @@ commonHeader = """
 \\definecolor{darkgreen}{RGB}{0,100,0}
 \\definecolor{gray}{RGB}{128,128,128}
 \\definecolor{grey}{RGB}{128,128,128}
+\\definecolor{coolblue}{RGB}{51,51,179}
 \\definecolor{nickcolor}{RGB}{51,51,179}
 \\definecolor{alexcolor}{RGB}{0,0,255}
 \\definecolor{madridcolor}{RGB}{51,51,179}

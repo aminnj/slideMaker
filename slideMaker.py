@@ -19,7 +19,6 @@ def addSlideTitle(title):
         \\begin{textblock*}{2.1cm}(0.8\\textwidth,0.8\\textheight)
             \\includegraphics[height=1.3cm]{./logos/cmsbwlogothick.png}
         \\end{textblock*}
-    \\end{frame} \n\n
     """ % (title)
 
     titlePageAlex = """
@@ -42,7 +41,6 @@ def addSlideTitle(title):
         \\begin{textblock*}{2.1cm}(0.8\\textwidth,0.8\\textheight)
             \\includegraphics[height=1.3cm]{./logos/cmsbwlogothick.png}
         \\end{textblock*}
-    \\end{frame} \n\n
     """ % (title)
 
     if(theme == "nick"):
@@ -53,7 +51,7 @@ def addSlideTitle(title):
     elif(theme == "madrid"):
         source += titlePageMadrid
     else:
-        source += "\\frame{ \\titlepage }"
+        source += "\\begin{frame} \\titlepage"
 
 
 def addSlidePlot(slideTitle, plotName):
@@ -62,7 +60,6 @@ def addSlidePlot(slideTitle, plotName):
     \\begin{center}
     \\vspace*{-0.035\\textheight}\\includegraphics[height=0.88\\textheight,keepaspectratio]{%s}
     \\end{center}
-    \\end{frame} \n\n
     """ % (slideTitle, plotName)
     return code
 
@@ -73,14 +70,12 @@ def addSlidePlotPlot(slideTitle, plotName1, plotName2):
     \\vspace*{-0.035\\textheight}\\includegraphics[height=0.95\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \\hfill
     \\vspace*{-0.035\\textheight}\\includegraphics[height=0.95\\textheight,width=0.48\\textwidth,keepaspectratio]{%s}
     \\end{center}
-    \\end{frame} \n\n
     """ % (slideTitle, plotName1, plotName2)
     return code
 
 def addSlideText(slideTitle,bullets):
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += utils.bulletsToCode(bullets)
-    code += "\\end{frame} \n\n"
     return code
 
 def addSlideTextPlot(slideTitle,bullets,plotName):
@@ -89,7 +84,7 @@ def addSlideTextPlot(slideTitle,bullets,plotName):
     code += "\\begin{center}"
     code += "\\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
                 % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName)
-    code += "\\end{center}\\end{frame} \n\n" 
+    code += "\\end{center}"
     return code
 
 def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
@@ -100,12 +95,12 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
                 % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName1)
     code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n"  \
                 % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName2)
-    code += "\\end{center}\\end{frame} \n\n" 
+    code += "\\end{center}"
     return code
 
 
 
-def addSlide(title=None,text=None,p1=None,p2=None):
+def addSlide(title=None,text=None,p1=None,p2=None,textobjects=[]):
     global source
 
     bullets = []
@@ -119,6 +114,7 @@ def addSlide(title=None,text=None,p1=None,p2=None):
         elif( p1 and p2 ): title = cleanP1 + ", " + cleanP2
         else: title = "\\phantom{}"
 
+    drewTitleSlide = False
     if( p1 and p2 ):
         if( text ):
             print ">>> Adding TextPlotPlot slide"
@@ -139,8 +135,62 @@ def addSlide(title=None,text=None,p1=None,p2=None):
     elif( title ):
         print ">>> Adding Title slide"
         addSlideTitle(title)
+        drewTitleSlide = True
     else:
         print "couldn't figure out what you want"
+
+    # draw free text objects before ending slide
+    for textobject in textobjects:
+        source += getFreetextCode(textobject)
+
+    if(drewTitleSlide and theme == "alex"): 
+        # for alex's theme, frame already ended within the title slide
+        pass
+    else:
+        source += "\\end{frame} \n\n"
+
+def textObject(x=0.5,y=0.5,width=0.3,text="",size=0,bold=False,color="black"):
+    obj = { }
+    obj["x"] = x
+    obj["y"] = y
+    obj["width"] = width
+    obj["text"] = text
+    obj["bold"] = bold
+    obj["color"] = color
+    if   (size == -4): obj["size"] = "tiny"; 
+    elif (size == -3): obj["size"] = "scriptsize"; 
+    elif (size == -2): obj["size"] = "footnotesize"; 
+    elif (size == -1): obj["size"] = "small"; 
+    elif (size ==  0): obj["size"] = "normalsize"; 
+    elif (size ==  1): obj["size"] = "large"; 
+    elif (size ==  2): obj["size"] = "Large"; 
+    elif (size ==  3): obj["size"] = "LARGE"; 
+    elif (size ==  4): obj["size"] = "Huge"; 
+    elif (size ==  5): obj["size"] = "HUGE"; 
+    else: obj["size"] = "normalsize"; 
+    return obj
+
+def getFreetextCode(obj):
+    w = obj["width"]
+    x = obj["x"]
+    y = obj["y"]
+    color = obj["color"]
+    size = obj["size"]
+    text = obj["text"]
+    if(obj["bold"]): text = "\\textbf{%s}" % text
+
+    code = """
+    \\begin{textblock*}{%.2f cm}[0.5,0.5](%.2f cm,%.2f cm)
+        \\begin{center}
+        \\begin{%s}
+            \\textcolor{%s}{%s}
+        \\end{%s}
+        \\end{center}
+    \\end{textblock*}
+    """ % (12.8*w,12.8*x,9.6*y, size, color, text, size)
+
+    return code
+
 
 def initSlides(me="Nick", themeName="nick", opts=""):
     global source, commonHeader, theme, themeAlex
@@ -243,12 +293,14 @@ if __name__ == '__main__':
     bullets = content.split("\n")
     content2 = "\n".join(bullets[0:4])
 
+    t1 = textObject(x=0.25,y=0.15,width=0.3, text="testlabel", color="red", size=0, bold=False) 
+    t2 = textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
     # for t in ["nick", "alex", "madrid"]:
-    for t in ["nick"]:
+    for t in ["alex"]:
         initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/")
-        addSlide(title="this is where I put a long title")
-        addSlide(p1="yields.pdf",p2="yields.pdf")
+        addSlide(title="this is where I'd put a title if I had one")
+        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2])
         addSlide(p1="zmass.pdf")
         addSlide(text=content)
         addSlide(text=content2, p1="zmass.pdf")

@@ -42,3 +42,5 @@ This will produce test_*.pdf with an example slide for each of the possible slid
 * figure out good algorithm for resizing images so that they don't overlap with text
 ** see http://www.latex-community.org/forum/viewtopic.php?f=45&t=22655
 * option for free floating text
+* option for arrows
+* customizable color for alex
