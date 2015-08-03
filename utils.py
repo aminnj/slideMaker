@@ -1,5 +1,5 @@
 ### utility functions that don't directly touch the latex source go here
-
+import commands, os, sys
 
 listOfOptions = ["dump", "copy", "compile", "graphicspaths", "shorttitle", "themecolor", "sidebyside", "modernfont", "noarrowhead","rotate"]
 def parseOptions(optString):
@@ -85,6 +85,33 @@ def splitTitle(title):
         return "\\\\ \\vspace{0.4cm} "+title
     else:
         return title[:cutoff]+title[cutoff:].split()[0] + "\\\\ \\vspace{0.4cm}" + " ".join(title[cutoff:].split()[1:])
+
+def slideToPng(slidenumber,output,outdir):
+    # note that output is the pdf file we produce from writeSlides()
+    # but outdir is where we want to store the individual pages
+    output = output.replace("tex","pdf")
+    stat,out = commands.getstatusoutput("gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -dFirstPage=%i -dLastPage=%i -sOutputFile=%s/page_%i.pdf %s" % (slidenumber, slidenumber, outdir, slidenumber, output))
+    stat,out = commands.getstatusoutput("gs -q -sDEVICE=pngalpha -dBATCH -dNOPAUSE -dDOINTERPOLATE -o %s/page_%i.png -sDEVICE=pngalpha -r480 %s/page_%i.pdf" % (outdir, slidenumber, outdir, slidenumber))
+
+def makeGUI(slidenumbers, output):
+    os.system("mkdir -p pages/")
+    for slidenumber in slidenumbers:
+        slideToPng(slidenumber, output, "pages/")
+
+    pngFiles = [file for file in os.listdir("./pages/") if file.endswith(".png")]
+
+    html = open("./html/gui.html","r").read()
+
+    slideStr = "'"+"', '".join(pngFiles)+"'"
+    html = html.replace("SLIDESHERE", slideStr)
+
+    newhtml = open("./pages/gui.html","w")
+    newhtml.write(html)
+    newhtml.close()
+
+    stat,out = commands.getstatusoutput("cp -rp pages ~/public_html/dump/")
+    print ">>> Copied GUI to uaf-6.t2.ucsd.edu/~%s/dump/pages/gui.html" % (os.getenv("USER"))
+
 
 
 # print parseOptions("--dump --title left --caption this is stupid --unrecognizedopt")

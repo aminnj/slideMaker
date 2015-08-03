@@ -2,9 +2,11 @@ import os,sys,commands
 import utils
 from strings import *
 
+slideNumber = 1
 source = ""
 theme = ""
 graphicspaths = ["./test/", "./logos/"]
+gridslides = []
 
 def addSlideTitle(title="", opts=""):
     global source
@@ -112,7 +114,8 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,opts=""):
     return code
 
 def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowobjects=[]):
-    global source
+    global source, slideNumber
+    slideNumber += 1
 
     bullets = []
     if( text ): bullets = text.split("\n")
@@ -164,6 +167,7 @@ def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowob
     if( drawGrid ):
         texts, arrows = [], []
         ndivs = 20
+        gridslides.append( slideNumber )
         for i in range(1,ndivs):
             texts.append( textObject(x=0.03,y=1.0*i/ndivs-0.010,width=0.3, text="\\scalebox{0.7}{%.2f}" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
             arrows.append( arrowObject( (0.0,1.0*i/ndivs), (1.0,1.0*i/ndivs), color="grey",opts="--noarrowhead" ) )
@@ -264,10 +268,11 @@ def getArrowCode(obj):
 
 
 def initSlides(me="Nick", themeName="nick", opts=""):
-    global source, commonHeader, theme, themeAlex
+    global source, commonHeader, theme, themeAlex, slideNumber
     source = ""
     theme = themeName.lower()
     opts = utils.parseOptions(opts)
+    slideNumber = 1
 
 
     print ">>> Hi",me
@@ -377,7 +382,6 @@ if __name__ == '__main__':
 
     # for t in ["nick", "alex", "madrid"]:
     for t in ["nick"]:
-        # initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 --modernfont")
         initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 ")
         addSlide(title="Perturbation Theory on $H_m(dS_n,\\mathbb{R})$ Orbifolds of Affine Bundles", opts="--shorttitle hep-th crap")
         addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2])
@@ -390,4 +394,6 @@ if __name__ == '__main__':
         addSlide(text=content2, p1="filt.pdf")
         addSlide(text=content2, p1="zmass.pdf", p2="zmass.pdf")
         writeSlides("test_%s.tex" % t, opts="--compile --copy --dump")
+
+        utils.makeGUI(gridslides, "test_%s.pdf" % t)
 
