@@ -11,6 +11,7 @@ commonHeader = """
 \\usepackage[absolute,overlay]{textpos}
 %% \\usepackage[absolute,overlay,showboxes]{textpos} %% showboxes for position debugging
 \\usepackage{tikz}
+\\usetikzlibrary{arrows,shapes}
 \\usepackage{microtype}
 \\usepackage{graphicx}
 \\usepackage{xcolor}
@@ -37,6 +38,7 @@ commonHeader = """
 \\date{\\today} 
 \\institute[SNT] 
 {
+    \\vspace*{-1cm}
     \\begin{center}
     %s
         \\end{center}

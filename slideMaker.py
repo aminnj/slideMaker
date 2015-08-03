@@ -111,7 +111,7 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,opts=""):
     code += "\\end{center}"
     return code
 
-def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[]):
+def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowobjects=[]):
     global source
 
     bullets = []
@@ -151,6 +151,8 @@ def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[]):
     # draw free text objects before ending slide
     for textobject in textobjects:
         source += getFreetextCode(textobject)
+    for arrowobject in arrowobjects:
+        source += getArrowCode(arrowobject)
 
     source += "\\end{frame} \n\n"
 
@@ -196,6 +198,33 @@ def getFreetextCode(obj):
 
     return code
 
+def arrowObject(point1,point2,color="coolblue"):
+    obj = { }
+    obj["x1"], obj["y1"] = point1
+    obj["x2"], obj["y2"] = point2
+    obj["color"] = color
+
+    return obj
+
+def getArrowCode(obj):
+    x1 = obj["x1"]
+    y1 = obj["y1"]
+    x2 = obj["x2"]
+    y2 = obj["y2"]
+    color = obj["color"]
+
+    code = """
+    \\begin{textblock*}{12.8cm}[1.0,0.0](12.8cm,9.6cm)
+        \\begin{tikzpicture}[overlay,remember picture]
+            \\coordinate (0) at (%.2fcm,%.2fcm);   (0)  node  {};
+            \\coordinate (1) at (%.2fcm,%.2fcm);   (1)  node  {};
+            \\draw[draw=%s,solid,-latex,fill=%s,thick] (0) -- (1);
+        \\end{tikzpicture}
+    \\end{textblock*}
+    """ % (12.8*x1,9.6*(1-y1),12.8*x2,9.6*(1-y2),color,color)
+
+    return code
+
 
 def initSlides(me="Nick", themeName="nick", opts=""):
     global source, commonHeader, theme, themeAlex
@@ -208,6 +237,9 @@ def initSlides(me="Nick", themeName="nick", opts=""):
     print ">>> Using theme:",theme
 
     source += commonHeader
+    if(opts["modernfont"]):
+        source += "\\usepackage{helvet} %% only modern font that works on uaf?"
+
     if(theme == "nick"):
         source += themeNick
         if(opts["themecolor"]): source = source.replace("\\definecolor{nickcolor}{RGB}{51,51,179}","\\definecolor{nickcolor}{RGB}{%s}" % opts["themecolor"])
@@ -303,11 +335,15 @@ if __name__ == '__main__':
     t1 = textObject(x=0.25,y=0.15,width=0.3, text="testlabel", color="red", size=0, bold=False) 
     t2 = textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
+    a1 = arrowObject( (0.31,0.15), (0.69,0.15) )
+    a2 = arrowObject( (0.31,0.15), (0.69,0.42) )
+
     # for t in ["nick", "alex", "madrid"]:
     for t in ["nick"]:
-        initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179")
-        addSlide(title="this is where I'd put a title if I had one that was long", opts="--shorttitle shorter title")
-        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2])
+        # initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 --modernfont")
+        initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 ")
+        addSlide(title="Perturbation Theory on $H_m(dS_n,\\mathbb{R})$ Orbifolds of Affine Bundles", opts="--shorttitle hep-th crap")
+        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2])
         addSlide(p1="zmass.pdf")
         addSlide(text=content)
         addSlide(text=content2, p1="zmass.pdf")

@@ -22,15 +22,19 @@ content = """
 t1 = sm.textObject(x=0.25,y=0.15,width=0.3, text="testlabel", color="red", size=0, bold=False) 
 t2 = sm.textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
+a1 = sm.arrowObject( (0.31,0.15), (0.69,0.15) )
+a2 = sm.arrowObject( (0.31,0.15), (0.69,0.42) )
+
 # supported themes are "nick", "alex", and "madrid"
 for t in ["nick","alex","madrid"]:
     # test2 and test3 can be folders with your plots, so you can execute this script anywhere really
     # themecolor takes RGB. could put in explicit color names, but RGB more robust
+    # also try the --modernfont option
     sm.initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179")
-    sm.addSlide(title="this is where I'd put a title if I had one that was long", opts="--shorttitle shorter title")
+    sm.addSlide(title="Perturbation Theory on $H_m(dS_n,\\mathbb{R})$ Orbifolds of Affine Bundles", opts="--shorttitle snarxiv hep-th")
 
     # pass in a list of textobjects (which are just dicts, so they can be modified too)
-    sm.addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2])
+    sm.addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2])
     sm.addSlide(p1="test/yields.pdf",p2="test/yields.pdf")
     sm.addSlide(p1="test/zmass.pdf")
     sm.addSlide(text=content+content)
@@ -49,4 +53,3 @@ This will produce test_*.pdf with an example slide for each of the possible slid
 ## TODO:
 * figure out good algorithm for resizing images so that they don't overlap with text
 ** see http://www.latex-community.org/forum/viewtopic.php?f=45&t=22655
-* option for arrows
