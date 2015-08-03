@@ -164,11 +164,11 @@ def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowob
     if( drawGrid ):
         texts, arrows = [], []
         ndivs = 20
-        for i in range(1,ndivs+1):
-            texts.append( textObject(x=0.03,y=1.0*i/ndivs-0.015,width=0.3, text="%.2f" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
+        for i in range(1,ndivs):
+            texts.append( textObject(x=0.03,y=1.0*i/ndivs-0.010,width=0.3, text="\\scalebox{0.7}{%.2f}" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
             arrows.append( arrowObject( (0.0,1.0*i/ndivs), (1.0,1.0*i/ndivs), color="black",opts="--noarrowhead" ) )
 
-            texts.append( textObject(y=0.01,x=1.0*i/ndivs-0.018,width=0.3, text="%.2f" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
+            texts.append( textObject(y=0.01,x=1.0*i/ndivs-0.015,width=0.3, text="\\scalebox{0.7}{%.2f}" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
             arrows.append( arrowObject( (1.0*i/ndivs,0.0), (1.0*i/ndivs,1.0), color="black",opts="--noarrowhead" ) )
         for text in texts: source += getFreetextCode(text)
         for arrow in arrows: source += getArrowCode(arrow)
@@ -209,7 +209,9 @@ def getFreetextCode(obj):
     color = obj["color"]
     size = obj["size"]
     text = obj["text"]
+    opts = utils.parseOptions(obj["opts"])
     if(obj["bold"]): text = "\\textbf{%s}" % text
+    if(opts["rotate"]): text = "\\rotatebox{%s}{%s}" % (opts["rotate"],text)
 
     code = """
     \\begin{textblock*}{%.2f cm}[0.5,0.5](%.2f cm,%.2f cm)
@@ -367,7 +369,7 @@ if __name__ == '__main__':
     bullets = content.split("\n")
     content2 = "\n".join(bullets[0:4])
 
-    t1 = textObject(x=0.25,y=0.15,width=0.3, text="testlabel", color="red", size=0, bold=False) 
+    t1 = textObject(x=0.25,y=0.15,width=0.3, text="testlabel", color="red", size=0, bold=False,opts="--rotate -45") 
     t2 = textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
     a1 = arrowObject( (0.31,0.15), (0.69,0.15) )
