@@ -81,12 +81,23 @@ def addSlideText(slideTitle,bullets,opts=""):
     return code
 
 def addSlideTextPlot(slideTitle,bullets,plotName,opts=""):
+    opts = utils.parseOptions(opts)
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
-    code += utils.bulletsToCode(bullets)
-    code += "\\begin{center}"
-    code += "\\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
-                % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName)
-    code += "\\end{center}"
+    
+    if(opts["sidebyside"]):
+        code += "\\begin{columns}\n  \\begin{column}{0.5\\textwidth} \n"
+        code += utils.bulletsToCode(bullets)
+        code += "\\end{column}\n  \\begin{column}{0.5\\textwidth}"
+        code += "    \\begin{center}"
+        code += "      \\includegraphics[width=\\textwidth,keepaspectratio]{%s} \n" % (plotName)
+        code += "    \\end{center}\n  \\end{column}\n\\end{columns} \n"
+    else:
+        code += utils.bulletsToCode(bullets)
+        code += "\\begin{center}"
+        code += "  \\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
+                    % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName)
+        code += "\\end{center}\n"
+
     return code
 
 def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,opts=""):
@@ -300,6 +311,7 @@ if __name__ == '__main__':
         addSlide(p1="zmass.pdf")
         addSlide(text=content)
         addSlide(text=content2, p1="zmass.pdf")
+        addSlide(text=content2, p1="zmass.pdf", opts="--sidebyside")
         startBackup()
         addSlide(text=content2, p1="filt.pdf")
         addSlide(text=content2, p1="zmass.pdf", p2="zmass.pdf")

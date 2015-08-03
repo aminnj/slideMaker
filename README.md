@@ -37,7 +37,7 @@ for t in ["nick","alex","madrid"]:
 
     # slides reset their numbering when you start the backup section
     sm.startBackup()
-    sm.addSlide(text=content, p1="test/filt.pdf")
+    sm.addSlide(text=content, p1="test/filt.pdf", opts="--sidebyside")
     sm.addSlide(text=content, p1="test/zmass.pdf", p2="test/zmass.pdf")
     sm.writeSlides("test_%s.tex" % t, opts="--compile --copy")
 ```
@@ -47,7 +47,6 @@ This will produce test_*.pdf with an example slide for each of the possible slid
 * put updated style files into style and include them in a way similar to enumitem
 
 ## TODO:
-* add slide type that has text on the left, picture on the right
 * figure out good algorithm for resizing images so that they don't overlap with text
 ** see http://www.latex-community.org/forum/viewtopic.php?f=45&t=22655
 * option for arrows

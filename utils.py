@@ -1,7 +1,7 @@
 ### utility functions that don't directly touch the latex source go here
 
 
-listOfOptions = ["dump", "copy", "compile", "graphicspaths", "shorttitle", "themecolor"]
+listOfOptions = ["dump", "copy", "compile", "graphicspaths", "shorttitle", "themecolor", "sidebyside"]
 def parseOptions(optString):
     opts = { }
     for optName in listOfOptions:
@@ -23,7 +23,7 @@ def parseOptions(optString):
     return opts
 
 def bulletsToCode(bullets):
-    code = "\\begin{itemize}\n"
+    code = "  \\begin{itemize}\n"
     wasSubpoint=False
     bullets = [bullet.strip() for bullet in bullets if len(bullet.strip()) > 3]
     for i,bullet in enumerate(bullets):
@@ -32,22 +32,22 @@ def bulletsToCode(bullets):
         bullet = bullet.replace("--","",1).replace("-","",1).strip()
 
         if(isSubpoint and not wasSubpoint):
-            code += "    \\begin{itemize}\n"
-            code += "      \\item %s \n" % (bullet)
+            code += "      \\begin{itemize}\n"
+            code += "        \\item %s \n" % (bullet)
         elif(wasSubpoint and not isSubpoint):
-            code += "    \\end{itemize}\n"
-            code += "  \\item %s \n" % (bullet)
+            code += "      \\end{itemize}\n"
+            code += "    \\item %s \n" % (bullet)
         elif(wasSubpoint and isSubpoint):
-            code += "      \\item %s \n" % (bullet)
+            code += "        \\item %s \n" % (bullet)
         elif(not wasSubpoint and not isSubpoint):
-            code += "  \\item %s \n" % (bullet)
+            code += "    \\item %s \n" % (bullet)
         else: print "You goofed with your logic"
 
-        if(isLast and isSubpoint): code += "  \\end{itemize}\n"
+        if(isLast and isSubpoint): code += "    \\end{itemize}\n"
 
         wasSubpoint = isSubpoint
 
-    code += "\\end{itemize}\n"
+    code += "  \\end{itemize}\n"
     return code
 
 def cleanTex(text):
