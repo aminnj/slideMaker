@@ -149,14 +149,33 @@ def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowob
         print "couldn't figure out what you want"
 
     # draw free text objects before ending slide
+    drawGrid = False
     for textobject in textobjects:
+        if("grid" in textobject):
+            print ">>> Unspecified coordinates for text, will print out a grid for you"
+            drawGrid = True
         source += getFreetextCode(textobject)
     for arrowobject in arrowobjects:
         source += getArrowCode(arrowobject)
+        if("grid" in arrowobject):
+            print ">>> Unspecified coordinates for arrow, will print out a grid for you"
+            drawGrid = True
+
+    if( drawGrid ):
+        texts, arrows = [], []
+        ndivs = 20
+        for i in range(1,ndivs+1):
+            texts.append( textObject(x=0.03,y=1.0*i/ndivs-0.015,width=0.3, text="%.2f" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
+            arrows.append( arrowObject( (0.0,1.0*i/ndivs), (1.0,1.0*i/ndivs), color="black",opts="--noarrowhead" ) )
+
+            texts.append( textObject(y=0.01,x=1.0*i/ndivs-0.018,width=0.3, text="%.2f" % (1.0*i/ndivs), color="red", size=-4, bold=False) )
+            arrows.append( arrowObject( (1.0*i/ndivs,0.0), (1.0*i/ndivs,1.0), color="black",opts="--noarrowhead" ) )
+        for text in texts: source += getFreetextCode(text)
+        for arrow in arrows: source += getArrowCode(arrow)
 
     source += "\\end{frame} \n\n"
 
-def textObject(x=0.5,y=0.5,width=0.3,text="",size=0,bold=False,color="black"):
+def textObject(x=0,y=0,width=0.3,text="",size=0,bold=False,color="black",opts=""):
     obj = { }
     obj["x"] = x
     obj["y"] = y
@@ -164,6 +183,12 @@ def textObject(x=0.5,y=0.5,width=0.3,text="",size=0,bold=False,color="black"):
     obj["text"] = text
     obj["bold"] = bold
     obj["color"] = color
+    obj["opts"] = opts
+
+    if(x==0 and y==0):
+        # let's flag this slide and put a grid on it to help the user
+        obj["grid"] = 1
+
     if   (size == -4): obj["size"] = "tiny"; 
     elif (size == -3): obj["size"] = "scriptsize"; 
     elif (size == -2): obj["size"] = "footnotesize"; 
@@ -198,11 +223,17 @@ def getFreetextCode(obj):
 
     return code
 
-def arrowObject(point1,point2,color="coolblue"):
+def arrowObject(point1=(0,0),point2=(0,0),color="coolblue",opts=""):
+
     obj = { }
     obj["x1"], obj["y1"] = point1
     obj["x2"], obj["y2"] = point2
     obj["color"] = color
+    obj["opts"] = opts
+
+    if(point1 == (0,0) and point2 == (0,0)):
+        # let's flag this slide and put a grid on it to help the user
+        obj["grid"] = 1
 
     return obj
 
@@ -212,16 +243,20 @@ def getArrowCode(obj):
     x2 = obj["x2"]
     y2 = obj["y2"]
     color = obj["color"]
+    opts = utils.parseOptions(obj["opts"])
+    type = ",-latex"
+
+    if(opts["noarrowhead"]): type = ""
 
     code = """
     \\begin{textblock*}{12.8cm}[1.0,0.0](12.8cm,9.6cm)
         \\begin{tikzpicture}[overlay,remember picture]
             \\coordinate (0) at (%.2fcm,%.2fcm);   (0)  node  {};
             \\coordinate (1) at (%.2fcm,%.2fcm);   (1)  node  {};
-            \\draw[draw=%s,solid,-latex,fill=%s,thick] (0) -- (1);
+            \\draw[draw=%s,solid,fill=%s,thick %s] (0) -- (1);
         \\end{tikzpicture}
     \\end{textblock*}
-    """ % (12.8*x1,9.6*(1-y1),12.8*x2,9.6*(1-y2),color,color)
+    """ % (12.8*x1,9.6*(1-y1),12.8*x2,9.6*(1-y2),color,color,type)
 
     return code
 
@@ -344,7 +379,8 @@ if __name__ == '__main__':
         initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 ")
         addSlide(title="Perturbation Theory on $H_m(dS_n,\\mathbb{R})$ Orbifolds of Affine Bundles", opts="--shorttitle hep-th crap")
         addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2])
-        addSlide(p1="zmass.pdf")
+        addSlide(p1="zmass.pdf", arrowobjects=[arrowObject()])
+        addSlide(p1="zmass.pdf", textobjects=[textObject(text="wheredoIgo?")])
         addSlide(text=content)
         addSlide(text=content2, p1="zmass.pdf")
         addSlide(text=content2, p1="zmass.pdf", opts="--sidebyside")

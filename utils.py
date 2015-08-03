@@ -1,7 +1,7 @@
 ### utility functions that don't directly touch the latex source go here
 
 
-listOfOptions = ["dump", "copy", "compile", "graphicspaths", "shorttitle", "themecolor", "sidebyside", "modernfont"]
+listOfOptions = ["dump", "copy", "compile", "graphicspaths", "shorttitle", "themecolor", "sidebyside", "modernfont", "noarrowhead"]
 def parseOptions(optString):
     opts = { }
     for optName in listOfOptions:

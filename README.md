@@ -36,7 +36,9 @@ for t in ["nick","alex","madrid"]:
     # pass in a list of textobjects (which are just dicts, so they can be modified too)
     sm.addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2])
     sm.addSlide(p1="test/yields.pdf",p2="test/yields.pdf")
-    sm.addSlide(p1="test/zmass.pdf")
+
+    # when I specify an empty arrow object, a helper grid gets printed on the slide!
+    sm.addSlide(p1="test/zmass.pdf", arrowobjects=[sm.arrowObject()])
     sm.addSlide(text=content+content)
 
     # slides reset their numbering when you start the backup section
