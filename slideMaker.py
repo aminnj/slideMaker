@@ -6,11 +6,14 @@ source = ""
 theme = ""
 graphicspaths = ["./test/", "./logos/"]
 
-def addSlideTitle(title):
+def addSlideTitle(title="", opts=""):
     global source
 
+    opts = utils.parseOptions(opts)
+    shorttitle = opts["shorttitle"] if opts["shorttitle"] else title
+
     titlePageNick = """
-    \\title{%s}
+    \\title[%s]{%s}
     \\begin{frame}
     \\titlepage
         \\begin{textblock*}{2.1cm}(0.12\\textwidth,0.8\\textheight)
@@ -19,20 +22,19 @@ def addSlideTitle(title):
         \\begin{textblock*}{2.1cm}(0.8\\textwidth,0.8\\textheight)
             \\includegraphics[height=1.3cm]{./logos/cmsbwlogothick.png}
         \\end{textblock*}
-    """ % (title)
+    """ % (shorttitle,title)
 
     titlePageAlex = """
-    \\frame[plain]{ \\titlepage }
-
-    \\usebackgroundtemplate{
-    \\begin{tikzpicture}[thick]
-    \\draw[fill=alexcolor, draw=alexcolor](0cm,0.0cm) -- (21.3cm,0.0cm) -- (21.3cm,21.3cm) -- (0.0cm,0.0cm);
-    \\end{tikzpicture}
-    }
+    \\begin{frame}[plain]
+        %% draw over global triangle so that it doesn't show up on the title slide
+        \\begin{tikzpicture}[thick]
+        \\draw[fill=white, draw=white](0cm,0.0cm) -- (20.3cm,0.0cm) -- (20.3cm,20.3cm) -- (0.0cm,0.0cm);
+        \\end{tikzpicture}
+        \\titlepage 
     """
 
     titlePageMadrid = """
-    \\title{%s}
+    \\title[%s]{%s}
     \\begin{frame}
     \\titlepage
         \\begin{textblock*}{2.1cm}(0.12\\textwidth,0.8\\textheight)
@@ -41,7 +43,7 @@ def addSlideTitle(title):
         \\begin{textblock*}{2.1cm}(0.8\\textwidth,0.8\\textheight)
             \\includegraphics[height=1.3cm]{./logos/cmsbwlogothick.png}
         \\end{textblock*}
-    """ % (title)
+    """ % (shorttitle,title)
 
     if(theme == "nick"):
         source += titlePageNick
@@ -54,7 +56,7 @@ def addSlideTitle(title):
         source += "\\begin{frame} \\titlepage"
 
 
-def addSlidePlot(slideTitle, plotName):
+def addSlidePlot(slideTitle, plotName,opts=""):
     code = """
     \\begin{frame}\\frametitle{%s}
     \\begin{center}
@@ -63,7 +65,7 @@ def addSlidePlot(slideTitle, plotName):
     """ % (slideTitle, plotName)
     return code
 
-def addSlidePlotPlot(slideTitle, plotName1, plotName2):
+def addSlidePlotPlot(slideTitle, plotName1, plotName2,opts=""):
     code = """
     \\begin{frame}\\frametitle{%s}
     \\begin{center}
@@ -73,12 +75,12 @@ def addSlidePlotPlot(slideTitle, plotName1, plotName2):
     """ % (slideTitle, plotName1, plotName2)
     return code
 
-def addSlideText(slideTitle,bullets):
+def addSlideText(slideTitle,bullets,opts=""):
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += utils.bulletsToCode(bullets)
     return code
 
-def addSlideTextPlot(slideTitle,bullets,plotName):
+def addSlideTextPlot(slideTitle,bullets,plotName,opts=""):
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += utils.bulletsToCode(bullets)
     code += "\\begin{center}"
@@ -87,7 +89,7 @@ def addSlideTextPlot(slideTitle,bullets,plotName):
     code += "\\end{center}"
     return code
 
-def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
+def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,opts=""):
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += utils.bulletsToCode(bullets)
     code += "\\begin{center}"
@@ -98,9 +100,7 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2):
     code += "\\end{center}"
     return code
 
-
-
-def addSlide(title=None,text=None,p1=None,p2=None,textobjects=[]):
+def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[]):
     global source
 
     bullets = []
@@ -114,28 +114,26 @@ def addSlide(title=None,text=None,p1=None,p2=None,textobjects=[]):
         elif( p1 and p2 ): title = cleanP1 + ", " + cleanP2
         else: title = "\\phantom{}"
 
-    drewTitleSlide = False
     if( p1 and p2 ):
         if( text ):
             print ">>> Adding TextPlotPlot slide"
-            source += addSlideTextPlotPlot(title,bullets,p1,p2)
+            source += addSlideTextPlotPlot(title,bullets,p1,p2,opts)
         else:
             print ">>> Adding PlotPlot slide"
-            source += addSlidePlotPlot(title,p1,p2)
+            source += addSlidePlotPlot(title,p1,p2,opts)
     elif( p1 ):
         if( text ):
             print ">>> Adding TextPlot slide"
-            source += addSlideTextPlot(title,bullets,p1)
+            source += addSlideTextPlot(title,bullets,p1,opts)
         else:
             print ">>> Adding Plot slide"
-            source += addSlidePlot(title,p1)
+            source += addSlidePlot(title,p1,opts)
     elif( text ):
         print ">>> Adding Text slide"
-        source += addSlideText(title,bullets)
+        source += addSlideText(title,bullets,opts)
     elif( title ):
         print ">>> Adding Title slide"
-        addSlideTitle(title)
-        drewTitleSlide = True
+        addSlideTitle(title,opts)
     else:
         print "couldn't figure out what you want"
 
@@ -143,11 +141,7 @@ def addSlide(title=None,text=None,p1=None,p2=None,textobjects=[]):
     for textobject in textobjects:
         source += getFreetextCode(textobject)
 
-    if(drewTitleSlide and theme == "alex"): 
-        # for alex's theme, frame already ended within the title slide
-        pass
-    else:
-        source += "\\end{frame} \n\n"
+    source += "\\end{frame} \n\n"
 
 def textObject(x=0.5,y=0.5,width=0.3,text="",size=0,bold=False,color="black"):
     obj = { }
@@ -205,10 +199,13 @@ def initSlides(me="Nick", themeName="nick", opts=""):
     source += commonHeader
     if(theme == "nick"):
         source += themeNick
+        if(opts["themecolor"]): source = source.replace("\\definecolor{nickcolor}{RGB}{51,51,179}","\\definecolor{nickcolor}{RGB}{%s}" % opts["themecolor"])
     elif(theme == "alex"):
         source += themeAlex
+        if(opts["themecolor"]): source = source.replace("\\definecolor{alexcolor}{RGB}{0,0,255}","\\definecolor{alexcolor}{RGB}{%s}" % opts["themecolor"])
     elif(theme == "madrid"):
         source += themeMadrid
+        if(opts["themecolor"]): source = source.replace("\\definecolor{madridcolor}{RGB}{51,51,179}","\\definecolor{madridcolor}{RGB}{%s}" % opts["themecolor"])
     else:
         print "unsupported theme:", theme
     
@@ -276,7 +273,6 @@ def startBackup():
     \\end{frame}
     """ % (color)
 
-
 if __name__ == '__main__':
     content = """
      - first \\textbf{bullet} point and if I make it long enough, it should wrap to the next line
@@ -297,9 +293,9 @@ if __name__ == '__main__':
     t2 = textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
     # for t in ["nick", "alex", "madrid"]:
-    for t in ["alex"]:
-        initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/")
-        addSlide(title="this is where I'd put a title if I had one")
+    for t in ["nick"]:
+        initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179")
+        addSlide(title="this is where I'd put a title if I had one that was long", opts="--shorttitle shorter title")
         addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2])
         addSlide(p1="zmass.pdf")
         addSlide(text=content)

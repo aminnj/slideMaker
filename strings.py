@@ -1,4 +1,4 @@
-### Long template strngs go here
+### Long template strings go here
 
 institute = """
     N. Amin, C. Campagnari, A. George, F. Golf, J. Gran,\\\\ B. Marsh, I. Suarez, S. Wang\\\\ (UCSB)\\\\ \\vspace{0.3cm} 
@@ -93,6 +93,12 @@ themeAlex = """
   \\begin{textblock*}{2.2cm}(10.3cm, 0.2cm)
   \\includegraphics[width=2.2cm]{./logos/CMS.pdf}
   \\end{textblock*}
+}
+
+\\usebackgroundtemplate{
+\\begin{tikzpicture}[thick]
+\\draw[fill=alexcolor, draw=alexcolor](0cm,0.0cm) -- (21.3cm,0.0cm) -- (21.3cm,21.3cm) -- (0.0cm,0.0cm);
+\\end{tikzpicture}
 }
 
 \\begin{document}

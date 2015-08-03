@@ -1,6 +1,7 @@
 ### utility functions that don't directly touch the latex source go here
 
-listOfOptions = ["dump", "copy", "compile", "graphicspaths"]
+
+listOfOptions = ["dump", "copy", "compile", "graphicspaths", "shorttitle", "themecolor"]
 def parseOptions(optString):
     opts = { }
     for optName in listOfOptions:
@@ -79,10 +80,11 @@ def textLinesToPlotHeight(nlines):
 
 def splitTitle(title):
     # title = cleanTex(title) # this removes the tex from the title!
-    if(len(title) <= 20):
+    cutoff = 20
+    if(len(title) <= cutoff):
         return "\\\\ \\vspace{0.4cm} "+title
     else:
-        return title[:20]+title[20:].split()[0] + "\\\\ \\vspace{0.4cm}" + " ".join(title[20:].split()[1:])
+        return title[:cutoff]+title[cutoff:].split()[0] + "\\\\ \\vspace{0.4cm}" + " ".join(title[cutoff:].split()[1:])
 
 
 # print parseOptions("--dump --title left --caption this is stupid --unrecognizedopt")
