@@ -7,7 +7,8 @@ institute = """
 """
 
 commonHeader = """
-\\documentclass[aspectratio=1610]{beamer}
+%% \\documentclass[aspectratio=1610]{beamer}
+\\documentclass{beamer}
 \\usepackage[absolute,overlay]{textpos}
 %% \\usepackage[absolute,overlay,showboxes]{textpos} %% showboxes for position debugging
 \\usepackage{tikz}

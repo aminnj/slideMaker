@@ -95,6 +95,7 @@ def slideToPng(slidenumber,output,outdir):
 
 def makeGUI(slidenumbers, output):
     os.system("mkdir -p pages/")
+    os.system("rm pages/*.png")
     for slidenumber in slidenumbers:
         slideToPng(slidenumber, output, "pages/")
 

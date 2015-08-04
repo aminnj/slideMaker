@@ -2,7 +2,7 @@ import os,sys,commands
 import utils
 from strings import *
 
-slideNumber = 1
+slideNumber = 0
 source = ""
 theme = ""
 graphicspaths = ["./test/", "./logos/"]
@@ -272,7 +272,7 @@ def initSlides(me="Nick", themeName="nick", opts=""):
     source = ""
     theme = themeName.lower()
     opts = utils.parseOptions(opts)
-    slideNumber = 1
+    slideNumber = 0
 
 
     print ">>> Hi",me
