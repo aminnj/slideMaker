@@ -12,7 +12,7 @@ commonHeader = """
 \\usepackage[absolute,overlay]{textpos}
 %% \\usepackage[absolute,overlay,showboxes]{textpos} %% showboxes for position debugging
 \\usepackage{tikz}
-\\usetikzlibrary{arrows,shapes}
+\\usetikzlibrary{arrows,shapes,shadows,calc}
 \\usepackage{microtype}
 \\usepackage{graphicx}
 \\usepackage{xcolor}
@@ -44,6 +44,37 @@ commonHeader = """
     %s
         \\end{center}
 }
+
+
+%% code adapted from http://tex.stackexchange.com/a/11483/3954
+%% some parameters for customization
+\\def\\shadowshift{0pt,0pt}
+\\def\\shadowradius{4pt}
+\\colorlet{innercolor}{black!60}
+\\colorlet{outercolor}{gray!05}
+%% this draws a shadow under a rectangle node
+\\newcommand\\drawshadow[1]{
+    \\begin{pgfonlayer}{shadow}
+        \\shade[outercolor,inner color=innercolor,outer color=outercolor] ($(#1.south west)+(\\shadowshift)+(\\shadowradius/2,\\shadowradius/2)$) circle (\\shadowradius);
+        \\shade[outercolor,inner color=innercolor,outer color=outercolor] ($(#1.north west)+(\\shadowshift)+(\\shadowradius/2,-\\shadowradius/2)$) circle (\\shadowradius);
+        \\shade[outercolor,inner color=innercolor,outer color=outercolor] ($(#1.south east)+(\\shadowshift)+(-\\shadowradius/2,\\shadowradius/2)$) circle (\\shadowradius);
+        \\shade[outercolor,inner color=innercolor,outer color=outercolor] ($(#1.north east)+(\\shadowshift)+(-\\shadowradius/2,-\\shadowradius/2)$) circle (\\shadowradius);
+        \\shade[top color=innercolor,bottom color=outercolor] ($(#1.south west)+(\\shadowshift)+(\\shadowradius/2,-\\shadowradius/2)$) rectangle ($(#1.south east)+(\\shadowshift)+(-\\shadowradius/2,\\shadowradius/2)$);
+        \\shade[left color=innercolor,right color=outercolor] ($(#1.south east)+(\\shadowshift)+(-\\shadowradius/2,\\shadowradius/2)$) rectangle ($(#1.north east)+(\\shadowshift)+(\\shadowradius/2,-\\shadowradius/2)$);
+        \\shade[bottom color=innercolor,top color=outercolor] ($(#1.north west)+(\\shadowshift)+(\\shadowradius/2,-\\shadowradius/2)$) rectangle ($(#1.north east)+(\\shadowshift)+(-\\shadowradius/2,\\shadowradius/2)$);
+        \\shade[outercolor,right color=innercolor,left color=outercolor] ($(#1.south west)+(\\shadowshift)+(-\\shadowradius/2,\\shadowradius/2)$) rectangle ($(#1.north west)+(\\shadowshift)+(\\shadowradius/2,-\\shadowradius/2)$);
+        \\filldraw ($(#1.south west)+(\\shadowshift)+(\\shadowradius/2,\\shadowradius/2)$) rectangle ($(#1.north east)+(\\shadowshift)-(\\shadowradius/2,\\shadowradius/2)$);
+    \\end{pgfonlayer}
+}
+%% create a shadow layer, so that we don't need to worry about overdrawing other things
+\\pgfdeclarelayer{shadow}
+\\pgfsetlayers{shadow,main}
+
+\\newcommand\\shadowimage[2][]{%%
+\\begin{tikzpicture}
+\\node[anchor=south west,inner sep=0] (image) at (0,0) {\\includegraphics[#1]{#2}};
+\\drawshadow{image}
+\\end{tikzpicture}}
 
 """ % (institute)
 

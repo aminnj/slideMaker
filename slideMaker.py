@@ -58,23 +58,23 @@ def addSlideTitle(title="", opts=""):
         source += "\\begin{frame} \\titlepage"
 
 
-def addSlidePlot(slideTitle, plotName,opts=""):
+def addSlidePlot(slideTitle, plotName,drawType="includegraphics",opts=""):
     code = """
     \\begin{frame}\\frametitle{%s}
     \\begin{center}
-    \\vspace*{-0.035\\textheight}\\includegraphics[height=0.88\\textheight,keepaspectratio]{%s}
+    \\vspace*{-0.035\\textheight}\\%s[height=0.88\\textheight,keepaspectratio]{%s}
     \\end{center}
-    """ % (slideTitle, plotName)
+    """ % (slideTitle, drawType, plotName)
     return code
 
-def addSlidePlotPlot(slideTitle, plotName1, plotName2,opts=""):
+def addSlidePlotPlot(slideTitle, plotName1, plotName2,drawType="includegraphics",opts=""):
     code = """
     \\begin{frame}\\frametitle{%s}
     \\begin{center}
-    \\vspace*{-0.035\\textheight}\\includegraphics[height=0.95\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \\hfill
-    \\vspace*{-0.035\\textheight}\\includegraphics[height=0.95\\textheight,width=0.48\\textwidth,keepaspectratio]{%s}
+    \\vspace*{-0.035\\textheight}\\%s[height=0.95\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \\hfill
+    \\vspace*{-0.035\\textheight}\\%s[height=0.95\\textheight,width=0.48\\textwidth,keepaspectratio]{%s}
     \\end{center}
-    """ % (slideTitle, plotName1, plotName2)
+    """ % (slideTitle, drawType, plotName1, drawType, plotName2)
     return code
 
 def addSlideText(slideTitle,bullets,opts=""):
@@ -82,7 +82,7 @@ def addSlideText(slideTitle,bullets,opts=""):
     code += utils.bulletsToCode(bullets)
     return code
 
-def addSlideTextPlot(slideTitle,bullets,plotName,opts=""):
+def addSlideTextPlot(slideTitle,bullets,plotName,drawType="includegraphics",opts=""):
     opts = utils.parseOptions(opts)
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     
@@ -91,31 +91,34 @@ def addSlideTextPlot(slideTitle,bullets,plotName,opts=""):
         code += utils.bulletsToCode(bullets)
         code += "\\end{column}\n  \\begin{column}{0.5\\textwidth}"
         code += "    \\begin{center}"
-        code += "      \\includegraphics[width=\\textwidth,keepaspectratio]{%s} \n" % (plotName)
+        code += "      \\%s[width=\\textwidth,keepaspectratio]{%s} \n" % (drawType, plotName)
         code += "    \\end{center}\n  \\end{column}\n\\end{columns} \n"
     else:
         code += utils.bulletsToCode(bullets)
         code += "\\begin{center}"
-        code += "  \\includegraphics[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
-                    % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName)
+        code += "  \\%s[height=%.2f\\textheight,keepaspectratio]{%s} \n" \
+                    % (drawType, utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName)
         code += "\\end{center}\n"
 
     return code
 
-def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,opts=""):
+def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,drawType="includegraphics",opts=""):
     code = "\\begin{frame}\\frametitle{%s} \n" % (slideTitle)
     code += utils.bulletsToCode(bullets)
     code += "\\begin{center}"
-    code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n" \
-                % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName1)
-    code += "\\includegraphics[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n"  \
-                % (utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName2)
+    code += "\\%s[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n" \
+                % (drawType, utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName1)
+    code += "\\%s[height=%.2f\\textheight,width=0.48\\textwidth,keepaspectratio]{%s} \n"  \
+                % (drawType, utils.textLinesToPlotHeight(utils.bulletNLines(bullets)),plotName2)
     code += "\\end{center}"
     return code
 
 def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowobjects=[]):
     global source, slideNumber
     slideNumber += 1
+
+    parsedOpts = utils.parseOptions(opts)
+    drawtype = parsedOpts["drawtype"] if parsedOpts["drawtype"] else "includegraphics"
 
     bullets = []
     if( text ): bullets = text.split("\n")
@@ -131,20 +134,20 @@ def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowob
     if( p1 and p2 ):
         if( text ):
             print ">>> Adding TextPlotPlot slide"
-            source += addSlideTextPlotPlot(title,bullets,p1,p2,opts)
+            source += addSlideTextPlotPlot(title,bullets,p1,p2,drawType=drawtype,opts=opts)
         else:
             print ">>> Adding PlotPlot slide"
-            source += addSlidePlotPlot(title,p1,p2,opts)
+            source += addSlidePlotPlot(title,p1,p2,drawType=drawtype,opts=opts)
     elif( p1 ):
         if( text ):
             print ">>> Adding TextPlot slide"
-            source += addSlideTextPlot(title,bullets,p1,opts)
+            source += addSlideTextPlot(title,bullets,p1,drawType=drawtype,opts=opts)
         else:
             print ">>> Adding Plot slide"
-            source += addSlidePlot(title,p1,opts)
+            source += addSlidePlot(title,p1,drawType=drawtype,opts=opts)
     elif( text ):
         print ">>> Adding Text slide"
-        source += addSlideText(title,bullets,opts)
+        source += addSlideText(title,bullets,opts=opts)
     elif( title ):
         print ">>> Adding Title slide"
         addSlideTitle(title,opts)
@@ -352,8 +355,8 @@ def startBackup():
     \\appendix
     \\begin{frame}[plain]
     \\centering
-    \\begin{textblock*}{10cm}[0.0,0.0](5.5cm,4.0cm)
-    \\begin{LARGE} \\textcolor{%s}{\\textbf{Backup}} \\end{LARGE}
+    \\begin{textblock*}{12.8cm}[0.5,0.5](6.4cm,4.8cm)
+    \\begin{LARGE} \\centering \\textcolor{%s}{\\textbf{Backup}} \\end{LARGE}
     \\end{textblock*}
     \\end{frame}
     """ % (color)
@@ -388,8 +391,8 @@ if __name__ == '__main__':
         addSlide(p1="zmass.pdf", arrowobjects=[arrowObject()])
         addSlide(p1="zmass.pdf", textobjects=[textObject(text="wheredoIgo?")])
         addSlide(text=content)
-        addSlide(text=content2, p1="zmass.pdf")
-        addSlide(text=content2, p1="zmass.pdf", opts="--sidebyside")
+        addSlide(text=content2, p1="zmass.pdf",opts="--drawtype shadowimage")
+        addSlide(text=content2, p1="zmass.pdf", opts="--sidebyside --drawtype shadowimage")
         startBackup()
         addSlide(text=content2, p1="filt.pdf")
         addSlide(text=content2, p1="zmass.pdf", p2="zmass.pdf")
