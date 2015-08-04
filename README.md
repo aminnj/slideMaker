@@ -1,4 +1,6 @@
 ## minimal minimal minimal working example
+0) export PATH=/nfs-7/texlive/2015/bin/x86_64-linux:$PATH
+
 1) check out repo and make sure there's a folder called "dump" inside the public_html directory
 
 2) python slideMaker.py
