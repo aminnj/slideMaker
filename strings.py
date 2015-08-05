@@ -81,8 +81,10 @@ commonHeader = """
 themeNick = """
 \\usepackage{./styles/enumitem}
 \\addtobeamertemplate{frametitle}{}{%
-    \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
-        \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
+    \\begin{textblock*}{2.1cm}(0.84\\textwidth,0.15cm)
+        \\includegraphics[height=0.70cm]{./logos/ucsbquark.pdf}
+    %% \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
+        %% \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
     \\end{textblock*}
     \\begin{textblock*}{2.1cm}(0.98\\textwidth,0.09cm)
         \\includegraphics[height=0.82cm]{./logos/cmsbwlogothick.png}
