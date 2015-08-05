@@ -256,10 +256,12 @@ def getArrowCode(obj):
     type = ",-latex"
 
     if(opts["noarrowhead"]): type = ""
+    if(opts["crayon"]): type += ",crayon"
 
     code = """
     \\begin{textblock*}{12.8cm}[1.0,0.0](12.8cm,9.6cm)
-        \\begin{tikzpicture}[overlay,remember picture]
+        %% \\begin{tikzpicture}[overlay,remember picture]
+        \\begin{tikzpicture}[overlay,remember picture,crayon/.style={thick, line cap=round, line join=round,decoration={random steps, segment length=0.15pt, amplitude=0.25pt}, decorate}]
             \\coordinate (0) at (%.2fcm,%.2fcm);   (0)  node  {};
             \\coordinate (1) at (%.2fcm,%.2fcm);   (1)  node  {};
             \\draw[draw=%s,solid,fill=%s,thick %s] (0) -- (1);
