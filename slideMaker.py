@@ -113,7 +113,7 @@ def addSlideTextPlotPlot(slideTitle,bullets,plotName1,plotName2,drawType="includ
     code += "\\end{center}"
     return code
 
-def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowobjects=[]):
+def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowobjects=[],boxobjects=[]):
     global source, slideNumber
     slideNumber += 1
 
@@ -165,6 +165,11 @@ def addSlide(title=None,text=None,p1=None,p2=None,opts="",textobjects=[],arrowob
         source += getArrowCode(arrowobject)
         if("grid" in arrowobject):
             print ">>> Unspecified coordinates for arrow, will print out a grid for you"
+            drawGrid = True
+    for boxobject in boxobjects:
+        source += getBoxCode(boxobject)
+        if("grid" in boxobject):
+            print ">>> Unspecified coordinates for box, will print out a grid for you"
             drawGrid = True
 
     if( drawGrid ):
@@ -233,17 +238,13 @@ def getFreetextCode(obj):
     return code
 
 def arrowObject(point1=(0,0),point2=(0,0),color="coolblue",opts=""):
-
     obj = { }
     obj["x1"], obj["y1"] = point1
     obj["x2"], obj["y2"] = point2
     obj["color"] = color
     obj["opts"] = opts
-
     if(point1 == (0,0) and point2 == (0,0)):
-        # let's flag this slide and put a grid on it to help the user
-        obj["grid"] = 1
-
+        obj["grid"] = 1 # let's flag this slide and put a grid on it to help the user
     return obj
 
 def getArrowCode(obj):
@@ -268,6 +269,41 @@ def getArrowCode(obj):
         \\end{tikzpicture}
     \\end{textblock*}
     """ % (12.8*x1,9.6*(1-y1),12.8*x2,9.6*(1-y2),color,color,type)
+
+    return code
+
+def boxObject(p1=(0,0),p2=(0,0),color="coolblue",opts=""):
+    obj = { }
+    obj["x1"], obj["y1"] = p1 # top left
+    obj["x2"], obj["y2"] = p2 # bottom right
+    obj["color"] = color
+    obj["opts"] = opts
+    if(p1 == (0,0) and p2 == (0,0)):
+        obj["grid"] = 1 # let's flag this slide and put a grid on it to help the user
+    return obj
+
+def getBoxCode(obj):
+    x1 = obj["x1"]
+    y1 = obj["y1"]
+    x2 = obj["x2"]
+    y2 = obj["y2"]
+    color = obj["color"]
+    opts = utils.parseOptions(obj["opts"])
+    type = ""
+    if(opts["crayon"]): type += ",crayon"
+
+    code = """
+    \\begin{textblock*}{12.8cm}[1.0,0.0](12.8cm,9.6cm)
+        %% \\begin{tikzpicture}[overlay,remember picture]
+        \\begin{tikzpicture}[overlay,remember picture,crayon/.style={thick, line cap=round, line join=round,decoration={random steps, segment length=0.15pt, amplitude=0.25pt}, decorate}]
+            \\coordinate (0) at (%.2fcm,%.2fcm);   (0)  node  {};
+            \\coordinate (1) at (%.2fcm,%.2fcm);   (1)  node  {};
+            \\coordinate (2) at (%.2fcm,%.2fcm);   (2)  node  {};
+            \\coordinate (3) at (%.2fcm,%.2fcm);   (3)  node  {};
+            \\draw[draw=%s,solid,thick %s] (0) -- (1) -- (2) -- (3) -- (0);
+        \\end{tikzpicture}
+    \\end{textblock*}
+    """ % (12.8*x1,9.6*(1-y1), 12.8*x2,9.6*(1-y1), 12.8*x2,9.6*(1-y2), 12.8*x1,9.6*(1-y2), color,type)
 
     return code
 
@@ -383,14 +419,19 @@ if __name__ == '__main__':
     t2 = textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
     a1 = arrowObject( (0.31,0.15), (0.69,0.15) )
-    a2 = arrowObject( (0.31,0.15), (0.69,0.42) )
+    a2 = arrowObject( (0.31,0.15), (0.65,0.46), opts="--crayon --noarrowhead")
+
+    # a box object takes coordinates for the top left and bottom right corners
+    # thus, you can turn an arrow object into a box object with the same
+    # coordinates if the arrow goes along the diagonal of the box
+    b1 = boxObject( (0.65,0.46), (0.75,0.52), color="red", opts="--crayon")
 
     # for t in ["nick", "alex", "madrid"]:
     for t in ["nick"]:
         initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 ")
         addSlide(title="Perturbation Theory on $H_m(dS_n,\\mathbb{R})$ Orbifolds of Affine Bundles", opts="--shorttitle hep-th crap")
         addSlide(text="UCSB Logo generated in LaTeX: \\[ \\begin{bmatrix} u \\\\ \\textcolor{gray!40!white}{d} \\end{bmatrix}\\!\\!  \\begin{bmatrix} c \\\\ s \\end{bmatrix}\\!\\!  \\begin{bmatrix} \\textcolor{gray!40!white}{t}   \\\\ b \\end{bmatrix} \\]")
-        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2])
+        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2], boxobjects=[b1])
         addSlide(p1="zmass.pdf", arrowobjects=[arrowObject()])
         addSlide(p1="zmass.pdf", textobjects=[textObject(text="wheredoIgo?")])
         addSlide(text=content)
