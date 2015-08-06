@@ -113,10 +113,10 @@ themeAlex = """
   \\begin{center}
   \\usebeamerfont{title}
   \\textcolor{alexcolor}{\\textbf{\\huge TITLEHERE} } %% Allowed 20 characters upstairs and 30 downstairs
+  \\textcolor{alexcolor}{\\rule{10cm}{2pt}}
   \\end{center}
   \\end{textblock*}
   \\begin{center}
-  \\textcolor{alexcolor}{\\rule{10cm}{2pt}}
   \\end{center}
   \\begin{textblock*}{12.8cm}(0cm,4.0cm)
   \\begin{center}
