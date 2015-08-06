@@ -12,7 +12,7 @@ commonHeader = """
 \\usepackage[absolute,overlay]{textpos}
 %% \\usepackage[absolute,overlay,showboxes]{textpos} %% showboxes for position debugging
 \\usepackage{tikz}
-\\usetikzlibrary{arrows,shapes,shadows,calc,decorations.pathmorphing}
+\\usetikzlibrary{arrows,shapes,shadows,shadows.blur,shapes.geometric,calc,decorations.pathmorphing,positioning,automata}
 \\usepackage{microtype}
 \\usepackage{graphicx}
 \\usepackage{xcolor}
@@ -45,6 +45,14 @@ commonHeader = """
         \\end{center}
 }
 
+%% code from http://tex.stackexchange.com/questions/218907/smooth-out-drop-shadow-at-the-edge-of-the-graph-in-pgf-blur
+\\tikzset{
+  shadowed/.style={preaction={
+      transform canvas={shift={(0.5pt,-1pt)}},draw opacity=.2,#1,preaction={
+        transform canvas={shift={(1.0pt,-1.5pt)}},draw opacity=.1,#1,preaction={
+          transform canvas={shift={(1.5pt,-2pt)}},draw opacity=.05,#1,
+        }}}},
+}
 
 %% code adapted from http://tex.stackexchange.com/a/11483/3954
 %% some parameters for customization

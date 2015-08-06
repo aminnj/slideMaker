@@ -291,6 +291,7 @@ def getBoxCode(obj):
     opts = utils.parseOptions(obj["opts"])
     type = ""
     if(opts["crayon"]): type += ",crayon"
+    if(opts["shadow"]): type += ",shadowed={double=gray,draw=gray}"
 
     code = """
     \\begin{textblock*}{12.8cm}[1.0,0.0](12.8cm,9.6cm)
@@ -418,20 +419,21 @@ if __name__ == '__main__':
     t1 = textObject(x=0.25,y=0.15,width=0.3, text="testlabel", color="red", size=0, bold=False,opts="--rotate -45") 
     t2 = textObject(x=0.75,y=0.15,width=0.3, text="testlabel", color="coolblue", size=0, bold=False) 
 
-    a1 = arrowObject( (0.31,0.15), (0.69,0.15) )
+    a1 = arrowObject( (0.31,0.15), (0.69,0.15))
     a2 = arrowObject( (0.31,0.15), (0.65,0.46), opts="--crayon --noarrowhead")
 
     # a box object takes coordinates for the top left and bottom right corners
     # thus, you can turn an arrow object into a box object with the same
     # coordinates if the arrow goes along the diagonal of the box
     b1 = boxObject( (0.65,0.46), (0.75,0.52), color="red", opts="--crayon")
+    b2 = boxObject( (0.85,0.66), (0.55,0.32), color="coolblue", opts="--shadow")
 
     # for t in ["nick", "alex", "madrid"]:
     for t in ["alex"]:
         initSlides(me="Nick",themeName=t,opts="--graphicspaths ./test2/,./test3/ --themecolor 51,51,179 ")
         addSlide(title="Perturbation Theory on $H_m(dS_n,\\mathbb{R})$ Orbifolds of Affine Bundles", opts="--shorttitle hep-th crap")
         addSlide(text="UCSB Logo generated in LaTeX: \\[ \\begin{bmatrix} u \\\\ \\textcolor{gray!40!white}{d} \\end{bmatrix}\\!\\!  \\begin{bmatrix} c \\\\ s \\end{bmatrix}\\!\\!  \\begin{bmatrix} \\textcolor{gray!40!white}{t}   \\\\ b \\end{bmatrix} \\]")
-        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2], boxobjects=[b1])
+        addSlide(p1="yields.pdf",p2="yields.pdf", textobjects=[t1,t2], arrowobjects=[a1,a2], boxobjects=[b1,b2])
         addSlide(p1="zmass.pdf", arrowobjects=[arrowObject()])
         addSlide(p1="zmass.pdf", textobjects=[textObject(text="wheredoIgo?")])
         addSlide(text=content)
