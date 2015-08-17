@@ -1,9 +1,7 @@
 ### Long template strings go here
 
 institute = """
-    N. Amin, C. Campagnari, A. George, F. Golf, J. Gran,\\\\ B. Marsh, I. Suarez, S. Wang\\\\ (UCSB)\\\\ \\vspace{0.3cm} 
-    G. Cerati, M. Derdzinski, D. Klein, D. Olivito, G. Zevi Della Porta, \\\\ C. Welke, J. Wood, F. W\\"urthwein, A. Yagil \\\\ (UCSD)\\\\ \\vspace{0.3cm} 
-        L. Bauerdick, K. Burkett, O. Gutsche, S. Jindariani, \\\\ J. Linacre, M. Liu, R. Lopes de Sa, H. Weber  \\\\ (FNAL) \\\\ 
+    N. Amin
 """
 
 commonHeader = """
@@ -12,20 +10,15 @@ commonHeader = """
 \\usepackage[absolute,overlay]{textpos}
 %% \\usepackage[absolute,overlay,showboxes]{textpos} %% showboxes for position debugging
 \\usepackage{tikz}
-\\usetikzlibrary{arrows,shapes,shadows,shadows.blur,shapes.geometric,calc,decorations.pathmorphing,positioning,automata}
+\\usetikzlibrary{arrows,shapes,shadows,shadows.blur,shapes.geometric,calc,decorations.pathmorphing,positioning,automata,decorations.pathreplacing}
 \\usepackage{microtype}
 \\usepackage{graphicx}
 \\usepackage{xcolor}
 \\usepackage{slashed}
-\\usepackage{./styles/appendixnumberbeamer} 
+\\usepackage{appendixnumberbeamer} 
 \\usepackage{amssymb}
 \\graphicspath{ GRAPHICSPATHHERE }
 \\setbeamertemplate{navigation symbols}{}
-
-\\newcommand{\\met}{\\slashed{E}_T}
-\\newcommand{\\red}[1]{\\textcolor{red}{#1}}
-\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}
-\\newcommand{\\orange}[1]{\\textcolor{orange}{#1}}
 
 \\definecolor{darkgreen}{RGB}{0,100,0}
 \\definecolor{gray}{RGB}{128,128,128}
@@ -35,13 +28,20 @@ commonHeader = """
 \\definecolor{alexcolor}{RGB}{0,0,255}
 \\definecolor{madridcolor}{RGB}{51,51,179}
 
+\\newcommand{\\met}{\\slashed{E}_T}
+\\newcommand{\\red}[1]{\\textcolor{red}{#1}}
+\\newcommand{\\blue}[1]{\\textcolor{blue}{#1}}
+\\newcommand{\\coolblue}[1]{\\textcolor{coolblue}{#1}}
+\\newcommand{\\orange}[1]{\\textcolor{orange}{#1}}
+
+
 \\author[AUTHORHERE]{}
 \\date{\\today} 
 \\institute[SNT] 
 {
     \\vspace*{-1cm}
     \\begin{center}
-    %s
+    INSTITUTEHERE
         \\end{center}
 }
 
@@ -84,18 +84,18 @@ commonHeader = """
 \\drawshadow{image}
 \\end{tikzpicture}}
 
-""" % (institute)
+"""
 
 themeNick = """
-\\usepackage{./styles/enumitem}
+\\usepackage{enumitem}
 \\addtobeamertemplate{frametitle}{}{%
     \\begin{textblock*}{2.1cm}(0.84\\textwidth,0.15cm)
-        \\includegraphics[height=0.70cm]{./logos/ucsbquark.pdf}
+        \\includegraphics[height=0.70cm]{ucsbquark.pdf}
     %% \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
-        %% \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
+        %% \\includegraphics[height=0.82cm]{ucsbwave.pdf}
     \\end{textblock*}
     \\begin{textblock*}{2.1cm}(0.98\\textwidth,0.09cm)
-        \\includegraphics[height=0.82cm]{./logos/cmsbwlogothick.png}
+        \\includegraphics[height=0.82cm]{cmsbwlogothick.png}
     \\end{textblock*}
 } \n\n
 
@@ -128,14 +128,14 @@ themeAlex = """
   \\end{center}
   \\begin{textblock*}{12.8cm}(0cm,4.0cm)
   \\begin{center}
-  %s
+  INSTITUTEHERE
   \\end{center}
   \\end{textblock*}
   \\begin{textblock*}{2.7cm}(0cm, 0.1cm)
-  \\includegraphics[width=2.7cm]{./logos/ucsb.pdf}
+  \\includegraphics[width=2.7cm]{ucsb.pdf}
   \\end{textblock*}
   \\begin{textblock*}{2.2cm}(10.3cm, 0.2cm)
-  \\includegraphics[width=2.2cm]{./logos/CMS.pdf}
+  \\includegraphics[width=2.2cm]{CMS.pdf}
   \\end{textblock*}
 }
 
@@ -146,16 +146,16 @@ themeAlex = """
 }
 
 \\begin{document}
-""" % (institute)
+"""
 
 themeMadrid = """
-\\usepackage{./styles/enumitem}
+\\usepackage{enumitem}
 \\addtobeamertemplate{frametitle}{}{%
     \\begin{textblock*}{2.1cm}(0.80\\textwidth,0.08cm)
-        \\includegraphics[height=0.82cm]{./logos/ucsbwave.pdf}
+        \\includegraphics[height=0.82cm]{ucsbwave.pdf}
     \\end{textblock*}
     \\begin{textblock*}{2.1cm}(0.98\\textwidth,0.09cm)
-        \\includegraphics[height=0.82cm]{./logos/cmsbwlogothick.png}
+        \\includegraphics[height=0.82cm]{cmsbwlogothick.png}
     \\end{textblock*}
 } \n\n
 
